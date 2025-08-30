@@ -20,6 +20,11 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
   const wrappersRef = useRef<Map<string, HTMLElement>>(new Map());
   const prevRectsRef = useRef<Map<string, DOMRect>>(new Map());
 
+  // helper: check if a dueDate (YYYY-MM-DD) is today (local time)
+  const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const todayStr = ymd(new Date());
+  const isDueToday = (dueDate?: string) => !!dueDate && dueDate === todayStr;
+
   useLayoutEffect(() => {
     // consume previous rects captured before DOM update (so removals can animate)
     const prevRects = consumePrevRects();
@@ -192,6 +197,23 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
             {collapsed ? '▸' : '▾'}
           </button>
         </div>
+
+        {collapsed && (
+          
+          <ul className="collapsed-summary">
+            <li className="collapsed-head">
+              <span className="collapsed-head-title">Task</span>
+              <span className="collapsed-head-date">Due time</span>
+            </li>
+            {items.map((t) => (
+              <li key={t.id} className="collapsed-item">
+                <span className="collapsed-title" title={t.title}>{t.title}</span>
+                <span className="collapsed-date">{isDueToday(t.dueDate) ? (t.dueTime || 'Not Set') : ''}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="column-body">
           {!collapsed && (
             // render cards with optional placeholder at dragOverIndex
