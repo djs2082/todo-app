@@ -1,5 +1,6 @@
 import React from 'react';
 import { TodoTask, Status } from '../model';
+import Button from './Button';
 
 type CardProps = {
   task: TodoTask;
@@ -30,34 +31,34 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
         {/* Buttons depend on status */}
         {task.status === Status.Pending && (
           <>
-            <button onClick={() => onChangeStatus(task.id, Status.InProgress)}>Start</button>
-            <button onClick={() => onEdit(task)}>Edit</button>
-            <button onClick={() => onDelete(task.id)}>Delete</button>
+            <Button variant="primary" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)}>Start</Button>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
           </>
         )}
 
         {task.status === Status.Cancelled && (
           <>
-            <button onClick={() => onChangeStatus(task.id, Status.InProgress)}>Resume</button>
-            <button onClick={() => onEdit(task)}>Edit</button>
-            <button onClick={() => onDelete(task.id)}>Delete</button>
+            <Button variant="success" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)}>Resume</Button>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
           </>
         )}
 
         {task.status === Status.InProgress && (
           <>
-            <button onClick={() => onChangeStatus(task.id, Status.Done)}>Done</button>
-            <button onClick={() => onChangeStatus(task.id, Status.Cancelled)}>Pause</button>
-            <button onClick={() => onEdit(task)}>Edit</button>
-            <button onClick={() => onDelete(task.id)}>Delete</button>
+            <Button variant="success" size="sm" onClick={() => onChangeStatus(task.id, Status.Done)}>Done</Button>
+            <Button variant="muted" size="sm" onClick={() => onChangeStatus(task.id, Status.Cancelled)}>Pause</Button>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
           </>
         )}
 
         {task.status === Status.Done && (
           <>
-            <button onClick={() => onChangeStatus(task.id, Status.Pending)}>Re-open</button>
-            <button onClick={() => onEdit(task)}>Edit</button>
-            <button onClick={() => onDelete(task.id)}>Delete</button>
+            <Button variant="ghost" size="sm" onClick={() => onChangeStatus(task.id, Status.Pending)}>Re-open</Button>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+            <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
           </>
         )}
       </div>

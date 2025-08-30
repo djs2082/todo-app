@@ -2,28 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import './styles.css';
 import HomeViewModel from './viewModel';
 import { TodoTask, Status } from './model';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import Column from './components/Column';
-import Card from './components/Card';
 import Modal from './components/Modal';
-
-type Todo = {
-  id: string;
-  text: string;
-  completed: boolean;
-};
-
-const STORAGE_KEY = 'todos_v1';
 
 export default function Home(): React.ReactElement {
   const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   const vmRef = useRef<HomeViewModel | null>(null);
   const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
-  const [stored, setStored] = useLocalStorage<string>('home_last_date', date);
-  const [text, setText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState<any>({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!vmRef.current) vmRef.current = new HomeViewModel();
@@ -35,16 +22,6 @@ export default function Home(): React.ReactElement {
     setSnapshot(vm.getTasksForDate(date));
     return unsubscribe;
   }, [date]);
-
-  function addTodo(e?: React.FormEvent) {
-    e?.preventDefault();
-    const value = text.trim();
-    if (!value) return;
-    const vm = vmRef.current!;
-    vm.addTask(date, { title: value });
-    setText('');
-    inputRef.current?.focus();
-  }
 
   function openNewTaskModal() {
     setForm({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
@@ -81,12 +58,6 @@ export default function Home(): React.ReactElement {
     // refresh snapshot immediately so UI updates without waiting for subscription
     setSnapshot(vm.getTasksForDate(date));
     setIsModalOpen(false);
-  }
-
-  function toggleTodo(id: string) {
-    const vm = vmRef.current!;
-    const found = vm.findTask(id);
-    if (found) vm.updateTask(id, { status: found.task.status === Status.Done ? Status.Pending : Status.InProgress });
   }
 
   function deleteTodo(id: string) {
