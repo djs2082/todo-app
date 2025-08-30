@@ -84,7 +84,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Todo App</h1>
+      <h1 className="home-title">Remember your duty.</h1>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
         <button type="button" onClick={openNewTaskModal} className="add-button">New Task</button>

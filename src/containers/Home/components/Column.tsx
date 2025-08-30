@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TodoTask, Status } from '../model';
 import Card from './Card';
 
@@ -12,11 +12,12 @@ type ColumnProps = {
 };
 
 export default function Column({ title, status, tasks, onChangeStatus, onEdit, onDelete }: ColumnProps) {
+  const [collapsed, setCollapsed] = useState(false);
   const items = status ? tasks.filter((t) => t.status === status) : tasks;
   return (
     <div className="column">
       <div
-        className="column-inner"
+        className={`column-inner ${collapsed ? 'collapsed' : ''}`}
         onDragOver={(e) => {
           e.preventDefault();
           e.dataTransfer.dropEffect = 'move';
@@ -25,18 +26,35 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
           e.preventDefault();
           try {
             const id = e.dataTransfer.getData('text/plain');
-            if (id && status !== null) onChangeStatus(id, status);
+            if (id && status !== null) {
+              // if column was collapsed, expand so user sees result
+              if (collapsed) setCollapsed(false);
+              onChangeStatus(id, status);
+            }
           } catch (err) {
             // ignore
           }
         }}
       >
         <div className="column-header">
-          <div>{title}</div>
-          <div>{items.length}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div>{title}</div>
+            <div style={{ opacity: 0.6 }}>{items.length}</div>
+          </div>
+
+          {/* collapse/expand button visible on mobile via CSS */}
+          <button
+            className="collapse-btn"
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? `Expand ${title}` : `Collapse ${title}`}
+            onClick={() => setCollapsed((s) => !s)}
+            type="button"
+          >
+            {collapsed ? '▸' : '▾'}
+          </button>
         </div>
         <div className="column-body">
-          {items.map((task) => (
+          {!collapsed && items.map((task) => (
             <Card key={task.id} task={task} onChangeStatus={onChangeStatus} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </div>

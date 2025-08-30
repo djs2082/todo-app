@@ -70,7 +70,9 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
           {/* Buttons depend on status */}
           {task.status === Status.Pending && (
             <>
-              <Button variant="primary" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)}>Start</Button>
+              <Button variant="success" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)} aria-label={`Start ${task.title}`}>
+                Start
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
               <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
             </>
