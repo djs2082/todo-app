@@ -4,6 +4,7 @@ import HomeViewModel from './viewModel';
 import { TodoTask, Status } from './model';
 import Column from './components/Column';
 import Modal from './components/Modal';
+import TimeClock from './components/TimeClock';
 
 export default function Home(): React.ReactElement {
 // eslint-disable-next-line
@@ -11,6 +12,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   const vmRef = useRef<HomeViewModel | null>(null);
   const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
   const [form, setForm] = useState<any>({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
 
   useEffect(() => {
@@ -27,11 +29,13 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   function openNewTaskModal() {
     setForm({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
     setIsModalOpen(true);
+    setIsTimeModalOpen(false);
   }
 
   function openEditTaskModal(task: TodoTask) {
     setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: task.dueTime ?? '', status: task.status });
     setIsModalOpen(true);
+    setIsTimeModalOpen(false);
   }
 
   function submitForm(e?: React.FormEvent) {
@@ -83,7 +87,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} title="Create Task" onClose={() => setIsModalOpen(false)}>
+      <Modal isOpen={isModalOpen} title={form.id ? 'Edit Task' : 'Create Task'} onClose={() => setIsModalOpen(false)}>
         <form onSubmit={submitForm} style={{ display: 'grid', gap: 12 }}>
           <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title" style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} required />
           <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={4} style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} />
@@ -94,13 +98,33 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
               <option value="high">High</option>
             </select>
             <input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={{ padding: 8, borderRadius: 6 }} />
-            <input type="time" value={form.dueTime} onChange={(e) => setForm({ ...form, dueTime: e.target.value })} style={{ padding: 8, borderRadius: 6 }} />
+            <div style={{ display: 'grid', gap: 6, flex: 1 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input type="time" value={form.dueTime} onChange={(e) => setForm({ ...form, dueTime: e.target.value })} style={{ padding: 8, borderRadius: 6, flex: 1 }} />
+                <button type="button" onClick={() => setIsTimeModalOpen(true)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #e5e7eb' }}>
+                  Pick time
+                </button>
+              </div>
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
             <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '8px 12px', borderRadius: 6 }}>Cancel</button>
-            <button type="submit" style={{ padding: '8px 12px', borderRadius: 6, background: '#2563eb', color: '#fff' }}>Create</button>
+            <button type="submit" style={{ padding: '8px 12px', borderRadius: 6, background: '#2563eb', color: '#fff' }}>{form.id ? 'Save' : 'Create'}</button>
           </div>
         </form>
+      </Modal>
+
+      {/* Time picker modal */}
+      <Modal isOpen={isTimeModalOpen} title="Pick time" onClose={() => setIsTimeModalOpen(false)} maxWidth={380}>
+        <div style={{ display: 'grid', gap: 10, justifyItems: 'center' }}>
+          <TimeClock value={form.dueTime || '00:00'} onChange={(v) => setForm({ ...form, dueTime: v })} size={220} />
+          <div style={{ textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>
+            <strong>{form.dueTime || '00:00'}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, width: '100%' }}>
+            <button type="button" onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 12px', borderRadius: 6 }}>Done</button>
+          </div>
+        </div>
       </Modal>
 
       <div className="main-columns">
