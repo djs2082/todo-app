@@ -1,5 +1,5 @@
 import React from 'react';
-import { TodoTask, Status } from '../model';
+import { TodoTask, Status, Priority } from '../model';
 import Button from './Button';
 
 type CardProps = {
@@ -10,9 +10,16 @@ type CardProps = {
 };
 
 export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardProps) {
+  const priorityClass =
+    task.priority === Priority.Low
+      ? 'card--low'
+      : task.priority === Priority.Medium
+      ? 'card--medium'
+      : 'card--high';
+
   return (
     <div
-      className="card"
+      className={`card ${priorityClass}`}
       draggable={true}
       onDragStart={(e) => {
         e.dataTransfer.setData('text/plain', task.id);
@@ -23,9 +30,14 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
       }}
     >
       <div className="card-main">
-        <div className="card-title">{task.title}</div>
+        <div className="card-title">
+          <span className="priority-badge">{task.priority}</span>
+          <span style={{ marginLeft: 8 }}>{task.title}</span>
+        </div>
         {task.description ? <div className="card-desc">{task.description}</div> : null}
-        <div className="card-meta">Priority: {task.priority} · {task.dueDate ?? ''} {task.dueTime ?? ''}</div>
+        <div className="card-meta">
+          <span style={{ marginLeft: 8 }}>{task.dueDate ?? ''} {task.dueTime ?? ''}</span>
+        </div>
       </div>
       <div className="card-actions">
         {/* Buttons depend on status */}

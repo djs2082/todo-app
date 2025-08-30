@@ -14,14 +14,74 @@
 .column-header { font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
 
 /* Card styles (larger to show details) */
-.card { background: #ffffff; border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; justify-content: space-between; gap: 12px; }
-.card-main { flex: 1; }
-.card-title { font-weight: 700; font-size: 1rem; }
-.card-desc { font-size: 0.9rem; color: #6b7280; margin-top: 6px; }
+.card { 
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(15,23,42,0.06);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--accent-color, #2563eb);
+}
+
+/* Priority accent presets (apply by adding class card--low / card--medium / card--high to the card) */
+.card--low { --accent-color: #10b981; }
+.card--medium { --accent-color: #f59e0b; }
+.card--high { --accent-color: #ef4444; }
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(15,23,42,0.12), 0 4px 10px rgba(15,23,42,0.06);
+}
+
+.card-main { flex: 1; min-width: 0; }
+.card-title { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+.card-desc { font-size: 0.92rem; color: #6b7280; margin-top: 6px; }
 .card-meta { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
-.card-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-.card-actions button { background: transparent; border: none; color: #dc2626; cursor: pointer; }
-.card-checkbox { width: 18px; height: 18px; }
+
+/* Small rounded badge to indicate priority */
+.priority-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  background: rgba(0,0,0,0.12);
+}
+.card--low .priority-badge { background: #059669; }
+.card--medium .priority-badge { background: #d97706; }
+.card--high .priority-badge { background: #dc2626; }
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid rgba(15,23,42,0.04);
+}
+
+/* Actions laid out horizontally and visually lighter */
+.card-actions { display: flex; flex-direction: row; gap: 8px; align-items: center; }
+.card-actions button { background: transparent; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; }
+.card-actions button:hover { filter: brightness(0.98); transform: translateY(-1px); }
 
 /* Button component styles */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; padding: 6px 10px; font-weight: 600; cursor: pointer; }
