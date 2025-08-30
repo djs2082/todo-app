@@ -84,10 +84,12 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Remember your duty.</h1>
-
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-        <button type="button" onClick={openNewTaskModal} className="add-button">New Task</button>
+      <div className="home-header">
+        <h1 className="home-title">Remember your duty.</h1>
+        <button type="button" onClick={openNewTaskModal} className="add-button">
+          <span className="add-button-text">New Task</span>
+          <span className="add-button-icon">+</span>
+        </button>
       </div>
 
       <Modal isOpen={isModalOpen} title="Create Task" onClose={() => setIsModalOpen(false)}>
@@ -118,15 +120,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
       </div>
 
       <div className="todo-footer">
-        <div>{remaining} remaining</div>
-        <div className="actions">
-          <button onClick={() => snapshot.forEach((s) => vmRef.current?.markDone(s.id))} className="link-button">
-            Mark all done
-          </button>
-          <button onClick={clearCompleted} className="link-button">
-            Clear completed
-          </button>
-        </div>
+
       </div>
     </div>
   );

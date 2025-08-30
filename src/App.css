@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
+/* App shell layout */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-main {
+  flex: 1;
+  overflow: hidden;
+  /* padding: 1rem; */
+}
+
 .App {
   text-align: center;
 }
@@ -29,6 +43,10 @@
   border-bottom: 1px solid rgba(255,255,255,0.04);
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 60px;
 }
 
 .app-brand { display: flex; align-items: center; gap: 12px; }
@@ -98,3 +116,11 @@
     transform: rotate(360deg);
   }
 }
+
+/* app shell: header sticky + main scrollable */
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.app-header { position: sticky; top: 0; z-index: 40; }
+.app-main { flex: 1 1 auto; overflow: auto; }
+
+/* ensure max width container centers and doesn't create horizontal scroll */
+.app-main > .max-w-4xl { box-sizing: border-box; }

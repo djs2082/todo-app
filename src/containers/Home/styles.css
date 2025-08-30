@@ -1,17 +1,174 @@
-.home-container { min-height: 100vh; display: flex; flex-direction: column; padding: 1.5rem; background: #f3f4f6; }
-.home-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+/* prevent horizontal scroll when content fits */
+html, body, #root {
+  overflow-x: hidden;
+}
+
+/* ensure container respects viewport and padding */
+.home-container {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* make images and media responsive to avoid overflow */
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ensure main columns don't force horizontal scroll; allow vertical scroll inside columns */
+.main-columns {
+  overflow-x: hidden;
+  
+  /* Hide scrollbar for all screen sizes */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.main-columns::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  background: transparent;
+}
+
+.home-container { 
+ 
+  height: calc(100vh - 60px); /* Subtract header height and padding */
+  display: flex; 
+  flex-direction: column; 
+  background: #f3f4f6;
+  overflow: hidden;
+  padding: 1rem;
+}
+        
+
+.home-header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-bottom: 1.5rem; */
+}
+
+.home-title { 
+  font-size: 1.75rem; 
+  font-weight: 700; 
+  margin: 0; /* Remove margin since it's handled by home-header */
+}
+
+/* Hide title on mobile screens */
+@media (max-width: 480px) {
+  .home-title {
+    display: none;
+  }
+  
+  .home-header {
+    height: 0;
+    /* justify-content: flex-end; Align button to the right when title is hidden */
+  }
+}
 
 .todo-form { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
 .todo-input { flex: 1; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem 1rem; outline: none; background: #fff; }
-.add-button { background: #2563eb; color: white; padding: 0.6rem 1rem; border-radius: 8px; border: none; cursor: pointer; }
-.add-button:hover { background: #1e40af; }
+.add-button { 
+  background: #2563eb; 
+  color: white; 
+  padding: 0.6rem 1rem; 
+  border-radius: 8px; 
+  border: none; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-button:hover { 
+  background: #1e40af; 
+}
+
+.add-button-icon {
+  display: none;
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* Mobile styles */
+@media (max-width: 640px) {
+  .add-button {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    z-index: 1000; /* Ensure button stays above other content */
+  }
+
+  .add-button-text {
+    display: none;
+  }
+
+  .add-button-icon {
+    display: block;
+  }
+
+  .add-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.3);
+  }
+}
 
 /* Columns layout */
-.main-columns { display: flex; gap: 1rem; align-items: stretch; width: 100%; margin: 1rem 0; flex: 1; }
-.column { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
-.column-inner { background: #ffffff; border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); display: flex; flex-direction: column; height: 100%; min-height: 60vh; }
-.column-body { flex: 1; overflow: auto; padding-top: 8px; }
-.column-header { font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.main-columns { 
+  display: flex; 
+  gap: 1rem; 
+  height: calc(100% - 100px); /* Subtract form height */
+  width: 100%; 
+  margin: 0; 
+}
+.column { 
+  flex: 1 1 0; 
+  min-width: 0;
+  height: 100%;
+}
+.column-inner { 
+  background: #ffffff; 
+  border-radius: 8px; 
+  padding: 12px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06); 
+  display: flex; 
+  flex-direction: column;
+  height: 100%;
+}
+.column-body { 
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 8px;
+  min-height: 0; /* Important for scroll to work */
+  
+  /* Hide scrollbar for all screen sizes */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.column-body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  background: transparent;
+}
+.column-header { 
+  font-weight: 700; 
+  margin-bottom: 8px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
 
 /* Collapsible column behavior (mobile) */
 .column-inner.collapsed .column-body {
@@ -192,8 +349,35 @@
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
-  .main-columns { flex-direction: column; }
-  .column-inner { min-height: auto; }
+  .main-columns { 
+    flex-direction: column;
+  }
+  .column-inner { 
+    min-height: auto;
+  }
+  
+  /* Hide scrollbars on mobile but keep functionality */
+  .main-columns,
+  .column-body {
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+    /* Hide scrollbar for IE/Edge */
+    -ms-overflow-style: none;
+  }
+
+  /* Hide scrollbar for Chrome/Safari/Webkit */
+  .main-columns::-webkit-scrollbar,
+  .column-body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+  }
+}
+
+@media (max-width: 480px) {
+    .main-columns{
+        height: 100%;
+    }
 }
 
 /* placeholder used during drag to show target slot */
