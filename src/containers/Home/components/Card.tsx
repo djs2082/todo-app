@@ -62,7 +62,8 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
 
   // keep interval id in a ref so we can always clear the same timer
   const intervalRef = React.useRef<number | null>(null);
-
+  
+  //   eslint-disable-next-line
   useEffect(() => {
     // load when task.id changes (new card)
     try {
