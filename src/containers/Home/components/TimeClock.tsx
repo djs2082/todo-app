@@ -75,7 +75,6 @@ export default function TimeClock({ value, onChange, size = 220 }: TimeClockProp
     setByAngle(deg);
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     function onMove(e: MouseEvent) {
       if (!dragging) return;
@@ -96,6 +95,7 @@ export default function TimeClock({ value, onChange, size = 220 }: TimeClockProp
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragging, mode]);
 
   const hour12 = ((hour % 12) + 12) % 12 || 12;
