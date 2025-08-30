@@ -67,9 +67,9 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
     setSnapshot(vm.getTasksForDate(date));
   }
 
-  function changeStatus(id: string, status: Status) {
+  function changeStatus(id: string, status: Status, insertIndex?: number) {
     const vm = vmRef.current!;
-    vm.updateTask(id, { status });
+    vm.updateTask(id, { status }, insertIndex);
     setSnapshot(vm.getTasksForDate(date));
   }
 

@@ -71,7 +71,7 @@ export default class HomeViewModel {
     return false;
   }
 
-  updateTask(id: string, partial: Partial<Omit<TaskData, 'id' | 'createdAt'>>) {
+  updateTask(id: string, partial: Partial<Omit<TaskData, 'id' | 'createdAt'>>, insertIndex?: number) {
     const found = this.findTask(id);
     if (!found) return null;
     const { task, day } = found;
@@ -81,8 +81,12 @@ export default class HomeViewModel {
     if (partial.status !== undefined && partial.status !== prevStatus) {
       // remove existing instance
       day.tasks = day.tasks.filter((t) => t.id !== task.id);
-      // insert at front so it appears at top of column
-      day.tasks.unshift(task);
+      // insert at requested index or front if not provided
+      if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= day.tasks.length) {
+        day.tasks.splice(insertIndex, 0, task);
+      } else {
+        day.tasks.unshift(task);
+      }
     }
     this.notify();
     return task;

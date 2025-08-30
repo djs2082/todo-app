@@ -195,3 +195,40 @@
   .main-columns { flex-direction: column; }
   .column-inner { min-height: auto; }
 }
+
+/* placeholder used during drag to show target slot */
+.card.placeholder {
+  height: 68px;
+  /* subtle grey block, no dark border or accent */
+  background: #f3f4f6; /* light grey */
+  border: none;
+  box-shadow: none;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  transition: height 200ms ease, margin 200ms ease, background 150ms ease;
+}
+
+/* hide the accent strip on placeholders */
+.card.placeholder::before {
+  display: none;
+  content: none;
+}
+
+/* when dragging, make existing cards animate to their new positions */
+.column-inner.dragging .card {
+  transition: transform 200ms ease, margin 200ms ease, opacity 150ms ease;
+}
+
+/* subtle lift for the dragged card (browser provides native drag preview, but we can hint) */
+.card.dragged {
+  opacity: 0.6;
+  transform: scale(0.995);
+}
+
+/* wrapper to animate cards shifting when placeholder appears */
+.card-wrapper {
+  transition: transform 220ms cubic-bezier(.2,.9,.3,1);
+}
+
+/* when dragging, animate existing cards */
+.column-inner.dragging .card-wrapper { will-change: transform; }

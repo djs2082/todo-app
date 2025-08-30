@@ -103,6 +103,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
         intervalRef.current = null;
       }
     };
+    // eslint-disable-next-line
   }, [task.status, task.id]);
 
   // persist trackedSeconds whenever it changes so we don't rely on closures during cleanup
@@ -149,9 +150,36 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
       onDragStart={(e) => {
         e.dataTransfer.setData('text/plain', task.id);
         e.dataTransfer.effectAllowed = 'move';
+        try {
+          // global fallback for browsers/events where dataTransfer isn't available during dragover
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.__draggingTaskId = task.id;
+        } catch (err) {
+          // ignore
+        }
+        // add a class so CSS can style the dragged element if needed
+        try {
+          (e.currentTarget as HTMLElement)?.classList.add('dragged');
+        } catch (err) {
+          // ignore
+        }
       }}
       onDragEnd={() => {
-        /* no-op for now */
+        try {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.__draggingTaskId = undefined;
+        } catch (err) {
+          // ignore
+        }
+        try {
+          // remove dragged class
+          const el = document.querySelector('.card.dragged') as HTMLElement | null;
+          if (el) el.classList.remove('dragged');
+        } catch (err) {
+          // ignore
+        }
       }}
     >
       <div className="card-main">
