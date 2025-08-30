@@ -96,7 +96,7 @@ export default function TimeClock({ value, onChange, size = 220 }: TimeClockProp
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
     };
-  }, [dragging, mode]);
+  }, [dragging, mode, handlePointer]);
 
   const hour12 = ((hour % 12) + 12) % 12 || 12;
   const hourAngle = (hour12 % 12) * 30; // 0..330
