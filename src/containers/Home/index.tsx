@@ -73,15 +73,6 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
     setSnapshot(vm.getTasksForDate(date));
   }
 
-  function clearCompleted() {
-    const vm = vmRef.current!;
-    const tasks = vm.getTasksForDate(date);
-    tasks.filter((t) => t.status === 'done').forEach((t) => vm.removeTask(t.id));
-    setSnapshot(vm.getTasksForDate(date));
-  }
-
-  const remaining = snapshot.filter((t) => t.status !== 'done').length;
-
   return (
     <div className="home-container">
       <div className="home-header">

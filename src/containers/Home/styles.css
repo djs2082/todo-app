@@ -71,7 +71,7 @@ img, svg {
 .todo-form { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
 .todo-input { flex: 1; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem 1rem; outline: none; background: #fff; }
 .add-button { 
-  background: #2563eb; 
+  background: #0f172a; /* Match header background */
   color: white; 
   padding: 0.6rem 1rem; 
   border-radius: 8px; 
@@ -80,10 +80,11 @@ img, svg {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(2,6,23,0.15);
 }
 
 .add-button:hover { 
-  background: #1e40af; 
+  background: #1e293b; /* Slightly lighter on hover */
 }
 
 .add-button-icon {
@@ -105,7 +106,8 @@ img, svg {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    background: #0f172a; /* Match header background */
+    box-shadow: 0 4px 12px rgba(2,6,23,0.25);
     z-index: 1000; /* Ensure button stays above other content */
   }
 
@@ -119,7 +121,8 @@ img, svg {
 
   .add-button:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 16px rgba(37,99,235,0.3);
+    background: #1e293b; /* Slightly lighter on hover */
+    box-shadow: 0 6px 16px rgba(2,6,23,0.3);
   }
 }
 
