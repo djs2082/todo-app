@@ -1,0 +1,161 @@
+import React, { useEffect, useRef, useState } from 'react';
+import './styles.css';
+import HomeViewModel from './viewModel';
+import { TodoTask, Status } from './model';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import Column from './components/Column';
+import Card from './components/Card';
+import Modal from './components/Modal';
+
+type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
+
+const STORAGE_KEY = 'todos_v1';
+
+export default function Home(): React.ReactElement {
+  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const vmRef = useRef<HomeViewModel | null>(null);
+  const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
+  const [stored, setStored] = useLocalStorage<string>('home_last_date', date);
+  const [text, setText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form, setForm] = useState<any>({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!vmRef.current) vmRef.current = new HomeViewModel();
+    const vm = vmRef.current;
+    const unsubscribe = vm.subscribe(() => {
+      setSnapshot(vm.getTasksForDate(date));
+    });
+    // initial snapshot
+    setSnapshot(vm.getTasksForDate(date));
+    return unsubscribe;
+  }, [date]);
+
+  function addTodo(e?: React.FormEvent) {
+    e?.preventDefault();
+    const value = text.trim();
+    if (!value) return;
+    const vm = vmRef.current!;
+    vm.addTask(date, { title: value });
+    setText('');
+    inputRef.current?.focus();
+  }
+
+  function openNewTaskModal() {
+    setForm({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
+    setIsModalOpen(true);
+  }
+
+  function openEditTaskModal(task: TodoTask) {
+    setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: task.dueTime ?? '', status: task.status });
+    setIsModalOpen(true);
+  }
+
+  function submitForm(e?: React.FormEvent) {
+    e?.preventDefault();
+    const vm = vmRef.current!;
+    if (form.id) {
+      vm.updateTask(form.id, {
+        title: form.title,
+        description: form.description,
+        priority: form.priority,
+        dueDate: form.dueDate,
+        dueTime: form.dueTime,
+        status: form.status,
+      });
+    } else {
+      vm.addTask(date, {
+        title: form.title,
+        description: form.description,
+        priority: form.priority,
+        dueDate: form.dueDate,
+        dueTime: form.dueTime,
+        status: form.status,
+      });
+    }
+    // refresh snapshot immediately so UI updates without waiting for subscription
+    setSnapshot(vm.getTasksForDate(date));
+    setIsModalOpen(false);
+  }
+
+  function toggleTodo(id: string) {
+    const vm = vmRef.current!;
+    const found = vm.findTask(id);
+    if (found) vm.updateTask(id, { status: found.task.status === Status.Done ? Status.Pending : Status.InProgress });
+  }
+
+  function deleteTodo(id: string) {
+    const vm = vmRef.current!;
+    vm.removeTask(id);
+    setSnapshot(vm.getTasksForDate(date));
+  }
+
+  function changeStatus(id: string, status: Status) {
+    const vm = vmRef.current!;
+    vm.updateTask(id, { status });
+    setSnapshot(vm.getTasksForDate(date));
+  }
+
+  function clearCompleted() {
+    const vm = vmRef.current!;
+    const tasks = vm.getTasksForDate(date);
+    tasks.filter((t) => t.status === 'done').forEach((t) => vm.removeTask(t.id));
+    setSnapshot(vm.getTasksForDate(date));
+  }
+
+  const remaining = snapshot.filter((t) => t.status !== 'done').length;
+
+  return (
+    <div className="home-container">
+      <h1 className="home-title">Todo App</h1>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <button type="button" onClick={openNewTaskModal} className="add-button">New Task</button>
+      </div>
+
+      <Modal isOpen={isModalOpen} title="Create Task" onClose={() => setIsModalOpen(false)}>
+        <form onSubmit={submitForm} style={{ display: 'grid', gap: 12 }}>
+          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title" style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} required />
+          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={4} style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} />
+          <div style={{ display: 'flex', gap: 8 }}>
+            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })} style={{ padding: 8, borderRadius: 6 }}>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={{ padding: 8, borderRadius: 6 }} />
+            <input type="time" value={form.dueTime} onChange={(e) => setForm({ ...form, dueTime: e.target.value })} style={{ padding: 8, borderRadius: 6 }} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '8px 12px', borderRadius: 6 }}>Cancel</button>
+            <button type="submit" style={{ padding: '8px 12px', borderRadius: 6, background: '#2563eb', color: '#fff' }}>Create</button>
+          </div>
+        </form>
+      </Modal>
+
+      <div className="main-columns">
+        <Column title="ToDo" status={Status.Pending} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
+        <Column title="Paused" status={Status.Cancelled} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
+        <Column title="In Progress" status={Status.InProgress} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
+        <Column title="Done" status={Status.Done} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
+      </div>
+
+      <div className="todo-footer">
+        <div>{remaining} remaining</div>
+        <div className="actions">
+          <button onClick={() => snapshot.forEach((s) => vmRef.current?.markDone(s.id))} className="link-button">
+            Mark all done
+          </button>
+          <button onClick={clearCompleted} className="link-button">
+            Clear completed
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
