@@ -6,7 +6,8 @@ import Column from './components/Column';
 import Modal from './components/Modal';
 
 export default function Home(): React.ReactElement {
-  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
+// eslint-disable-next-line
+const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   const vmRef = useRef<HomeViewModel | null>(null);
   const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
