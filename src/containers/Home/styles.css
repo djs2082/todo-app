@@ -44,26 +44,85 @@
 .card--medium { --accent-color: #f59e0b; }
 .card--high { --accent-color: #ef4444; }
 
+/* Status based accents */
+.card--status-todo::before,
+.card--status-paused::before { background: #ef4444; }
+.card--status-done::before { background: #10b981; }
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(15,23,42,0.12), 0 4px 10px rgba(15,23,42,0.06);
 }
 
 .card-main { flex: 1; min-width: 0; }
-.card-title { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
-.card-desc { font-size: 0.92rem; color: #6b7280; margin-top: 6px; }
-.card-meta { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
 
-/* Small rounded badge to indicate priority */
+/* Card layout */
+.card-top { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  width: 100%;
+}
+
+/* Card content spacing */
+.card-desc {
+  margin-top: 16px;
+  color: #6b7280;
+  font-size: 0.92rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.card-datetime {
+  margin-top: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 24px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.datetime-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.datetime-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.datetime-value {
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* Actions at the bottom */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Priority badge more compact */
 .priority-badge {
-  display: inline-block;
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
-  background: rgba(0,0,0,0.12);
+  flex-shrink: 0;
 }
+
+/* Small rounded badge to indicate priority */
 .card--low .priority-badge { background: #059669; }
 .card--medium .priority-badge { background: #d97706; }
 .card--high .priority-badge { background: #dc2626; }
@@ -79,7 +138,7 @@
 }
 
 /* Actions laid out horizontally and visually lighter */
-.card-actions { display: flex; flex-direction: row; gap: 8px; align-items: center; }
+.card-actions { margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
 .card-actions button { background: transparent; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; }
 .card-actions button:hover { filter: brightness(0.98); transform: translateY(-1px); }
 
