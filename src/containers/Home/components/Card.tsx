@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TodoTask, Status, Priority } from '../model';
 import Button from './Button';
 
@@ -27,6 +27,120 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
     if (!s) return '';
     return s.length > n ? s.slice(0, n - 1) + '…' : s;
   };
+
+  // live seconds until due (positive) or overdue (negative)
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(() => computeSecondsLeft(task.dueDate, task.dueTime));
+
+  useEffect(() => {
+    setSecondsLeft(computeSecondsLeft(task.dueDate, task.dueTime));
+    const t = setInterval(() => setSecondsLeft(computeSecondsLeft(task.dueDate, task.dueTime)), 1000);
+    return () => clearInterval(t);
+  }, [task.dueDate, task.dueTime]);
+
+  function computeSecondsLeft(dueDate?: string, dueTime?: string): number | null {
+    if (!dueDate || !dueTime) return null;
+    // dueDate expected YYYY-MM-DD, dueTime expected HH:MM
+    const dParts = dueDate.split('-').map((p) => parseInt(p, 10));
+    const tParts = dueTime.split(':').map((p) => parseInt(p, 10));
+    if (dParts.length !== 3 || tParts.length < 2 || Number.isNaN(dParts[0]) || Number.isNaN(tParts[0])) return null;
+    const due = new Date(dParts[0], dParts[1] - 1, dParts[2], tParts[0], tParts[1], 0);
+    const now = new Date();
+    const diffSec = Math.round((due.getTime() - now.getTime()) / 1000); // seconds
+    return diffSec;
+  }
+
+  // tracked work time in seconds (persisted to localStorage per task)
+  const lsKey = `worktime_${task.id}`;
+  const [trackedSeconds, setTrackedSeconds] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem(lsKey);
+      return raw ? parseInt(raw, 10) || 0 : 0;
+    } catch (e) {
+      return 0;
+    }
+  });
+
+  // keep interval id in a ref so we can always clear the same timer
+  const intervalRef = React.useRef<number | null>(null);
+
+  useEffect(() => {
+    // load when task.id changes (new card)
+    try {
+      const raw = localStorage.getItem(lsKey);
+      setTrackedSeconds(raw ? parseInt(raw, 10) || 0 : 0);
+    } catch (e) {
+      setTrackedSeconds(0);
+    }
+
+    // ensure we don't leave a stray interval when switching cards
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [task.id]);
+
+  // start/stop interval based on status; use a ref so it's reliably cleared
+  useEffect(() => {
+    if (task.status === Status.InProgress) {
+      // only create if there's not already one
+      if (intervalRef.current === null) {
+        intervalRef.current = window.setInterval(() => {
+          setTrackedSeconds((s) => s + 1);
+        }, 1000) as unknown as number;
+      }
+    } else {
+      // not in progress -> clear any running timer
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    // cleanup on unmount / before next run
+    return () => {
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [task.status, task.id]);
+
+  // persist trackedSeconds whenever it changes so we don't rely on closures during cleanup
+  useEffect(() => {
+    try {
+      localStorage.setItem(lsKey, String(trackedSeconds));
+    } catch (e) {
+      // ignore
+    }
+  }, [lsKey, trackedSeconds]);
+
+  // save on unmount too (harmless with the above persistence)
+  useEffect(() => {
+    return () => {
+      try {
+        localStorage.setItem(lsKey, String(trackedSeconds));
+      } catch (e) {
+        // ignore
+      }
+    };
+  }, [lsKey, trackedSeconds]);
+
+  function formatDurationFromSeconds(sec: number) {
+    const isNegative = sec < 0;
+    const abs = Math.abs(sec);
+    const hrs = Math.floor(abs / 3600);
+    const mins = Math.floor((abs % 3600) / 60);
+    if (hrs > 0) return `${isNegative ? 'Overdue ' : 'Due in '}${hrs}h ${mins}m`;
+    return `${isNegative ? 'Overdue ' : 'Due in '}${mins}m`;
+  }
+
+  function formatUpFromSeconds(sec: number) {
+    const abs = Math.abs(sec);
+    const hrs = Math.floor(abs / 3600);
+    const mins = Math.floor((abs % 3600) / 60);
+    if (hrs > 0) return `${hrs}h ${mins}m`;
+    return `${mins}m`;
+  }
 
   return (
     <div
@@ -67,16 +181,31 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
 
         {/* Fourth row: actions */}
         <div className="card-actions">
-          {/* Buttons depend on status */}
+          {/* left: due-in timer for Pending (only) */}
+          {task.status === Status.Pending && (
+            <div className={`due-in ${secondsLeft !== null && secondsLeft < 0 ? 'overdue' : ''}`}>
+              {secondsLeft === null ? 'Due: not set' : formatDurationFromSeconds(secondsLeft)}
+            </div>
+          )}
+
+          {/* working time (live while InProgress, shown as Worked when paused) */}
+          {(task.status === Status.InProgress || task.status === Status.Cancelled) && (
+            <div className={`working-time ${task.status === Status.Cancelled ? 'worked' : ''}`}>
+              {task.status === Status.InProgress ? `Working time ${formatUpFromSeconds(trackedSeconds)}` : `Worked: ${formatUpFromSeconds(trackedSeconds)}`}
+            </div>
+          )}
+
+          <div className="actions-right">
+           {/* Buttons depend on status */}
           {task.status === Status.Pending && (
             <>
-              <Button variant="success" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)} aria-label={`Start ${task.title}`}>
+              <Button variant="primary" size="sm" onClick={() => onChangeStatus(task.id, Status.InProgress)} aria-label={`Start ${task.title}`}>
                 Start
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
-              <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
-            </>
-          )}
+               <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+               <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
+             </>
+           )}
 
           {task.status === Status.Cancelled && (
             <>
@@ -97,13 +226,14 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
 
           {task.status === Status.Done && (
             <>
-              <Button variant="ghost" size="sm" onClick={() => onChangeStatus(task.id, Status.Pending)}>Re-open</Button>
-              <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
-              <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+               <Button variant="ghost" size="sm" onClick={() => onChangeStatus(task.id, Status.Pending)}>Re-open</Button>
+               <Button variant="ghost" size="sm" onClick={() => onEdit(task)}>Edit</Button>
+               <Button variant="danger" size="sm" onClick={() => onDelete(task.id)}>Delete</Button>
+             </>
+           )}
+          </div>
+         </div>
+       </div>
+     </div>
+   );
+ }

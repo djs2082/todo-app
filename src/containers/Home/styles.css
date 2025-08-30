@@ -161,9 +161,7 @@
 }
 
 /* Actions laid out horizontally and visually lighter */
-.card-actions { margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
-.card-actions button { background: transparent; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; }
-.card-actions button:hover { filter: brightness(0.98); transform: translateY(-1px); }
+.card-actions { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; }
 
 /* Button component styles */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; padding: 6px 10px; font-weight: 600; cursor: pointer; }
@@ -175,6 +173,22 @@
 .btn-sm { padding: 6px 8px; font-size: 0.85rem; border-radius: 6px; }
 .btn-md { padding: 8px 12px; font-size: 0.95rem; }
 .btn-lg { padding: 10px 14px; font-size: 1rem; }
+
+/* Due-in timer style */
+.due-in {
+  font-size: 0.85rem;
+  color: #f97316; /* orange for upcoming */
+  font-weight: 700;
+  padding-right: 12px;
+  border-right: 1px solid #f3f4f6;
+}
+
+.due-in.overdue { color: #dc2626; }
+
+.working-time { font-size: 0.85rem; color: #065f46; font-weight: 700; padding-right: 12px; border-right: 1px solid #f3f4f6; margin-left: 12px; }
+.working-time.worked { color: #374151; font-weight: 600; }
+
+.actions-right { display: flex; gap: 8px; align-items: center; margin-left: 8px; }
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
