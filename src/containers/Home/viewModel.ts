@@ -78,15 +78,17 @@ export default class HomeViewModel {
     // detect status change and move task to front of list
     const prevStatus = task.status;
     task.update(partial as Partial<TaskData>);
-    if (partial.status !== undefined && partial.status !== prevStatus) {
+    // If an insertIndex is provided, reorder the task within this day's list (or in the destination)
+    if (typeof insertIndex === 'number') {
       // remove existing instance
       day.tasks = day.tasks.filter((t) => t.id !== task.id);
-      // insert at requested index or front if not provided
-      if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= day.tasks.length) {
-        day.tasks.splice(insertIndex, 0, task);
-      } else {
-        day.tasks.unshift(task);
-      }
+      // clamp index
+      const idx = Math.max(0, Math.min(insertIndex, day.tasks.length));
+      day.tasks.splice(idx, 0, task);
+    } else if (partial.status !== undefined && partial.status !== prevStatus) {
+      // status changed but no explicit index -> place at front
+      day.tasks = day.tasks.filter((t) => t.id !== task.id);
+      day.tasks.unshift(task);
     }
     this.notify();
     return task;

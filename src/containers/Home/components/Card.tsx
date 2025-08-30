@@ -111,7 +111,6 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
     try {
       localStorage.setItem(lsKey, String(trackedSeconds));
     } catch (e) {
-      // ignore
     }
   }, [lsKey, trackedSeconds]);
 
@@ -155,6 +154,27 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.__draggingTaskId = task.id;
+          // also record source column and index (the column code sets data-task-id on wrappers)
+          try {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const wrapper = document.querySelector(`.card-wrapper[data-task-id="${task.id}"]`);
+            if (wrapper) {
+              // get column title from ancestor
+              const col = wrapper.closest('.column');
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              window.__draggingSrcColumn = col ? (col.querySelector('.column-header div')?.textContent || '') : '';
+              // compute index among siblings
+              const siblings = Array.from(wrapper.parentElement?.querySelectorAll('.card-wrapper') || []) as HTMLElement[];
+              const idx = siblings.findIndex((s) => s.dataset.taskId === task.id);
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              window.__draggingSrcIndex = idx;
+            }
+          } catch (err) {
+            // ignore
+          }
         } catch (err) {
           // ignore
         }

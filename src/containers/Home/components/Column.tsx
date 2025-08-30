@@ -55,7 +55,7 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
   }, [items]);
 
   return (
-    <div className="column">
+    <div className="column" data-column-title={title}>
       <div
         className={`column-inner ${collapsed ? 'collapsed' : ''} ${dragOverIndex !== null ? 'dragging' : ''}`}
         onDragEnter={() => {
@@ -145,9 +145,27 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
                 if (insertIndex === -1) insertIndex = visible.length;
               }
 
-              // call handler with optional index
-              // @ts-ignore - allow optional third arg
-              onChangeStatus(id, status, insertIndex);
+              // if dropping into the same column, we should reorder without changing status
+              try {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                const srcColumn = window.__draggingSrcColumn as string | undefined;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                const srcIndex = typeof window.__draggingSrcIndex === 'number' ? window.__draggingSrcIndex : undefined;
+                if (srcColumn === title && typeof srcIndex === 'number') {
+                  // reorder within same column
+                  capturePositions();
+                  onChangeStatus(id, status, insertIndex);
+                } else {
+                  // moving between columns: update status and insert at index
+                  capturePositions();
+                  onChangeStatus(id, status, insertIndex);
+                }
+              } catch (ex) {
+                // fallback
+                onChangeStatus(id, status, insertIndex);
+              }
 
               // clear placeholder
               setDragOverIndex(null);
@@ -192,10 +210,16 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
                       transform: dragOverIndex !== null && idx >= dragOverIndex ? 'translateY(68px)' : undefined,
                     }}
                   >
-                    <Card task={task} onChangeStatus={onChangeStatus} onEdit={onEdit} onDelete={onDelete} />
-                  </div>
-                </React.Fragment>
-              ))}
+                    <Card
+                      task={task}
+                      onChangeStatus={onChangeStatus}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      // expose drag metadata by writing to window in drag handlers inside Card
+                    />
+                   </div>
+                 </React.Fragment>
+               ))}
 
               {dragOverIndex !== null && dragOverIndex === items.length ? <div className="card placeholder" /> : null}
             </>
