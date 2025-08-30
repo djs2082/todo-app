@@ -75,6 +75,7 @@ export default function TimeClock({ value, onChange, size = 220 }: TimeClockProp
     setByAngle(deg);
   }
 
+//eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     function onMove(e: MouseEvent) {
       if (!dragging) return;
