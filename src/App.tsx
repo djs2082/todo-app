@@ -2,19 +2,30 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './containers/Home';
 import logo from './images/logo.png'
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
+  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light');
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+
   return (
     <BrowserRouter>
-      <div className="app-shell min-h-screen bg-gray-50">
+      <div className={`app-shell min-h-screen ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
         <header className="app-header">
           <div className="max-w-4xl mx-auto">
-            <div className="app-brand">
-              <div className="app-logo" aria-hidden="true">
-                {/* Place your logo file in the project's public/ folder as 'karya-logo.png' */}
-                <img src={logo} alt="Karya logo" className="app-logo-img" />
+            <div className="app-header-row">
+              <div className="app-brand">
+                <div className="app-logo" aria-hidden="true">
+                  {/* Place your logo file in the project's public/ folder as 'karya-logo.png' */}
+                  <img src={logo} alt="Karya logo" className="app-logo-img" />
+                </div>
+                <h1 className="app-title">KARYA <span className="app-sub">App</span></h1>
               </div>
-              <h1 className="app-title">KARYA <span className="app-sub">App</span></h1>
+              <div className="app-actions">
+                <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+                  {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+                </button>
+              </div>
             </div>
           </div>
         </header>

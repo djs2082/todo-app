@@ -419,3 +419,8 @@ img, svg {
 
 /* when dragging, animate existing cards */
 .column-inner.dragging .card-wrapper { will-change: transform; }
+
+/* Dark theme: make home container background dark */
+.theme-dark .home-container {
+  background: #111827;
+}

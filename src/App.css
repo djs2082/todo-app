@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
+/* Theme roots */
+.theme-light { background: #f9fafb; color: #0f172a; }
+.theme-dark { background: #0b1220; color: #e5e7eb; }
+
+/* Smooth theme transitions */
+.app-shell, .app-header, .app-main, .column-inner, .card { transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease; }
+
 /* App shell layout */
 .app-shell {
   display: flex;
@@ -47,6 +54,18 @@
   top: 0;
   z-index: 10;
   height: 60px;
+}
+
+.app-header { position: sticky; top: 0; z-index: 40; }
+.app-header-row { display: flex; align-items: center; justify-content: space-between; padding-right: 72px; }
+.app-actions { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
+
+@media (max-width: 640px) {
+  .app-header { padding: 0.5rem 0.75rem; }
+  .app-title { font-size: 1rem; }
+  .app-logo { width: 36px; height: 36px; }
+  .app-header-row { padding-right: 56px; }
+  .app-actions { right: 12px; }
 }
 
 .app-brand { display: flex; align-items: center; gap: 12px; }
@@ -124,3 +143,47 @@
 
 /* ensure max width container centers and doesn't create horizontal scroll */
 .app-main > .max-w-4xl { box-sizing: border-box; }
+
+/* Theme toggle button */
+.theme-toggle {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+/* Dark theme adjustments */
+.theme-dark .app-main { background: #111827; }
+.theme-dark .column-inner {
+  background: #0f172a;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.theme-dark .card {
+  background: linear-gradient(180deg, #0f172a, #0b1220);
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+}
+.theme-dark .card-desc { color: #9ca3af; }
+.theme-dark .btn-muted { background: #111827; color: #e5e7eb; border-color: #1f2937; }
+.theme-dark .btn-ghost { color: #e5e7eb; }
+.theme-dark .status-pill { background: #111827; color: #e5e7eb; border-color: #1f2937; }
+
+/* Dark theme card text overrides */
+.theme-dark .card-title,
+.theme-dark .card-desc,
+.theme-dark .datetime-label,
+.theme-dark .datetime-value,
+.theme-dark .working-time,
+.theme-dark .due-in,
+.theme-dark .due-in.overdue {
+  color: #ffffff;
+}
+
+/* Dark theme: ensure working-time overrides component variants */
+.theme-dark .working-time.worked { color: #ffffff; }
+.theme-dark .working-time { border-right-color: rgba(255,255,255,0.12); }
+.theme-dark .due-in { border-right-color: rgba(255,255,255,0.12); }
