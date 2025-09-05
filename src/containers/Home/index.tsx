@@ -80,7 +80,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   return (
     <div className="home-container">
       <div className="home-header">
-        <h1 className="home-title">Remember your duty.</h1>
+        {/* <h1 className="home-title">Remember your duty.</h1> */}
         <button type="button" onClick={openNewTaskModal} className="add-button">
           <span className="add-button-text">New Task</span>
           <span className="add-button-icon">+</span>
