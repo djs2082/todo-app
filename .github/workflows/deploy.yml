@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Build and deploy to S3
     runs-on: ubuntu-latest
+    environment: production
     env:
       BUCKET: ${{ secrets.S3_BUCKET }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
