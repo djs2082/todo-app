@@ -4,7 +4,34 @@ import HomeViewModel from './viewModel';
 import { TodoTask, Status } from './model';
 import Column from './components/Column';
 import Modal from './components/Modal';
-import TimeClock from './components/TimeClock';
+
+// Time format conversion utilities
+const to12Hour = (time24: string): { hours: string, minutes: string, period: 'AM' | 'PM' } => {
+  if (!time24 || time24 === '') return { hours: '12', minutes: '00', period: 'AM' };
+  
+  const [hours24, minutes] = time24.split(':');
+  let hours = parseInt(hours24, 10);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  
+  if (hours === 0) hours = 12;
+  if (hours > 12) hours = hours - 12;
+  
+  return { 
+    hours: hours.toString().padStart(2, '0'), 
+    minutes: minutes || '00', 
+    period 
+  };
+};
+
+const to24Hour = (hours: string, minutes: string, period: 'AM' | 'PM'): string => {
+  let hours24 = parseInt(hours, 10);
+  
+  if (period === 'PM' && hours24 < 12) hours24 += 12;
+  if (period === 'AM' && hours24 === 12) hours24 = 0;
+  
+  return `${hours24.toString().padStart(2, '0')}:${minutes}`;
+};
+
 
 export default function Home(): React.ReactElement {
 // eslint-disable-next-line
@@ -12,8 +39,10 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   const vmRef = useRef<HomeViewModel | null>(null);
   const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
+  // Removed isTimeModalOpen and TimeClock modal
   const [form, setForm] = useState<any>({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
+  // Derived time state for 12-hour format display
+  const [timeState, setTimeState] = useState<{ hours: string, minutes: string, period: 'AM' | 'PM' }>({ hours: '12', minutes: '00', period: 'AM' });
 
   useEffect(() => {
     if (!vmRef.current) vmRef.current = new HomeViewModel();
@@ -28,14 +57,18 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
   function openNewTaskModal() {
     setForm({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
+    setTimeState({ hours: '12', minutes: '00', period: 'AM' });
     setIsModalOpen(true);
-    setIsTimeModalOpen(false);
+  // setIsTimeModalOpen(false); // removed
   }
 
   function openEditTaskModal(task: TodoTask) {
-    setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: task.dueTime ?? '', status: task.status });
+    const dueTime = task.dueTime ?? '';
+    setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: dueTime, status: task.status });
+    // Update time picker UI state when editing a task
+    setTimeState(to12Hour(dueTime));
     setIsModalOpen(true);
-    setIsTimeModalOpen(false);
+  // setIsTimeModalOpen(false); // removed
   }
 
   function submitForm(e?: React.FormEvent) {
@@ -98,12 +131,61 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
               <option value="high">High</option>
             </select>
             <input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={{ padding: 8, borderRadius: 6 }} />
-            <div style={{ display: 'grid', gap: 6, flex: 1 }}>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input type="time" value={form.dueTime} onChange={(e) => setForm({ ...form, dueTime: e.target.value })} style={{ padding: 8, borderRadius: 6, flex: 1 }} />
-                <button type="button" onClick={() => setIsTimeModalOpen(true)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #e5e7eb' }}>
-                  Pick time
-                </button>
+            <div style={{ display: 'flex', gap: 8, flex: 1, alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
+                <select 
+                  value={timeState.hours} 
+                  onChange={(e) => {
+                    const newHours = e.target.value;
+                    setTimeState(prev => {
+                      const newState = { ...prev, hours: newHours };
+                      const newTime = to24Hour(newHours, newState.minutes, newState.period);
+                      setForm({ ...form, dueTime: newTime });
+                      return newState;
+                    });
+                  }}
+                  style={{ padding: 8, borderRadius: 6, width: '70px' }}
+                >
+                  {Array.from({ length: 12 }).map((_, i) => {
+                    const hour = (i + 1).toString().padStart(2, '0');
+                    return <option key={hour} value={hour}>{hour}</option>;
+                  })}
+                </select>
+                <span>:</span>
+                <select 
+                  value={timeState.minutes} 
+                  onChange={(e) => {
+                    const newMinutes = e.target.value;
+                    setTimeState(prev => {
+                      const newState = { ...prev, minutes: newMinutes };
+                      const newTime = to24Hour(newState.hours, newMinutes, newState.period);
+                      setForm({ ...form, dueTime: newTime });
+                      return newState;
+                    });
+                  }}
+                  style={{ padding: 8, borderRadius: 6, width: '70px' }}
+                >
+                  {Array.from({ length: 60 }).map((_, i) => {
+                    const minute = i.toString().padStart(2, '0');
+                    return <option key={minute} value={minute}>{minute}</option>;
+                  })}
+                </select>
+                <select 
+                  value={timeState.period} 
+                  onChange={(e) => {
+                    const newPeriod = e.target.value as 'AM' | 'PM';
+                    setTimeState(prev => {
+                      const newState = { ...prev, period: newPeriod };
+                      const newTime = to24Hour(newState.hours, newState.minutes, newPeriod);
+                      setForm({ ...form, dueTime: newTime });
+                      return newState;
+                    });
+                  }}
+                  style={{ padding: 8, borderRadius: 6, width: '70px' }}
+                >
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
               </div>
             </div>
           </div>
@@ -114,18 +196,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
         </form>
       </Modal>
 
-      {/* Time picker modal */}
-      <Modal isOpen={isTimeModalOpen} title="Pick time" onClose={() => setIsTimeModalOpen(false)} maxWidth={380}>
-        <div style={{ display: 'grid', gap: 10, justifyItems: 'center' }}>
-          <TimeClock value={form.dueTime || '00:00'} onChange={(v) => setForm({ ...form, dueTime: v })} size={220} />
-          <div style={{ textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>
-            <strong>{form.dueTime || '00:00'}</strong>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, width: '100%' }}>
-            <button type="button" onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 12px', borderRadius: 6 }}>Done</button>
-          </div>
-        </div>
-      </Modal>
+  {/* TimeClock and modal removed: now only a simple time input is used */}
 
       <div className="main-columns">
         <Column title="ToDo" status={Status.Pending} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
