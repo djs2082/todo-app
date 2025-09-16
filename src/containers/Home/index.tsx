@@ -84,6 +84,7 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
         status: form.status,
       });
     } else {
+      // addTask is async now (will attempt remote create when authenticated)
       vm.addTask(date, {
         title: form.title,
         description: form.description,
@@ -91,6 +92,8 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
         dueDate: form.dueDate,
         dueTime: form.dueTime,
         status: form.status,
+      }).catch(() => {
+        // swallow errors, viewmodel handles fallback to local
       });
     }
     // refresh snapshot immediately so UI updates without waiting for subscription

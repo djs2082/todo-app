@@ -1,0 +1,111 @@
+.landing-root{
+  min-height: 100vh ;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 32px;
+  position: relative;
+}
+.landing-overlay{
+  position: absolute;
+  inset: 72px 0 0 0; /* leave header visible */
+  background: linear-gradient(180deg, rgba(10,11,13,0.6), rgba(10,11,13,0.6));
+  z-index: 0;
+}
+.landing-card{
+  position: relative;
+  z-index: 1;
+  width:380px;
+  background: rgba(10,10,12,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 28px 26px;
+  box-shadow: 0 10px 40px rgba(2,6,23,0.7);
+  text-align: center;
+}
+.landing-brand{
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+}
+.landing-sub{
+  color: rgba(255,255,255,0.92);
+  opacity: 0.95;
+  margin-bottom: 18px;
+}
+.landing-form{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.landing-footer{font-size:12px;color:rgba(255,255,255,0.75);margin-top:14px}
+.landing-card a{color:#60a5fa}
+
+.landing-card .MuiFormControl-root{ width:100% }
+/* Outlined inputs: dark background, white text, white border on focus */
+.landing-card .MuiOutlinedInput-root{
+  background: rgba(0,0,0,0.6);
+  border-radius: 8px;
+}
+.landing-card .MuiOutlinedInput-notchedOutline{
+  border-color: rgba(255,255,255,0.12);
+}
+.landing-card .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+  border-color: rgba(255,255,255,0.95);
+  border-width: 1px;
+}
+.landing-card .MuiInputLabel-root{ color: rgba(255,255,255,0.7) }
+.landing-card .MuiInputLabel-root.Mui-focused{ color: #fff }
+.landing-card .MuiInputBase-input{ color: #fff }
+.landing-card .MuiInputBase-input::placeholder{ color: rgba(255,255,255,0.45) }
+.landing-card .MuiFormHelperText-root{ color: #ffb4b4 }
+
+/* Autofill (browser) overrides - keep dark background and white text */
+.landing-card input:-webkit-autofill,
+.landing-card input:-webkit-autofill:focus,
+.landing-card textarea:-webkit-autofill,
+.landing-card textarea:-webkit-autofill:focus,
+.landing-card .MuiOutlinedInput-input:-webkit-autofill{
+  -webkit-text-fill-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0.6) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0.6) inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+/* Firefox autofill */
+.landing-card input:-moz-autofill,
+.landing-card textarea:-moz-autofill{
+  box-shadow: inset 0 0 0px 1000px rgba(0,0,0,0.6) !important;
+  color: #fff !important;
+}
+.landing-card .MuiButton-contained{
+  background: linear-gradient(180deg, #000, #0a0a0a);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.85);
+}
+.landing-card .MuiButton-contained:hover{
+  background: linear-gradient(180deg, #111, #050505);
+  transform: translateY(-1px);
+}
+.landing-card .MuiButton-outlined{ color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.12) }
+.landing-card .landing-small{ display:flex; justify-content:space-between; margin-top:10px; font-size:13px; color:rgba(255,255,255,0.8) }
+
+/* Modal content that should look like landing card */
+.landing-modal-content{
+  background: rgba(10,10,12,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 18px;
+  color: #fff;
+}
+.landing-modal-content .MuiFormControl-root{ width:100% }
+.landing-modal-content .MuiOutlinedInput-root{ background: rgba(0,0,0,0.6); border-radius: 8px; }
+.landing-modal-content .MuiOutlinedInput-notchedOutline{ border-color: rgba(255,255,255,0.12); }
+.landing-modal-content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{ border-color: rgba(255,255,255,0.95); border-width: 1px; }
+.landing-modal-content .MuiInputLabel-root{ color: rgba(255,255,255,0.7) }
+.landing-modal-content .MuiInputLabel-root.Mui-focused{ color: #fff }
+.landing-modal-content .MuiInputBase-input{ color: #fff }
+.landing-modal-content .MuiFormHelperText-root{ color: #ffb4b4 }
+.landing-modal-content .MuiButton-contained{ background: linear-gradient(180deg, #000, #0a0a0a); color: #fff; font-weight: 700; box-shadow: 0 10px 24px rgba(0,0,0,0.6); border-radius: 8px; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.85); }
+.landing-modal-content .MuiButton-outlined{ color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.12) }
