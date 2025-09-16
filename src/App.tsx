@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './containers/Home';
+import Landing from './containers/Landing';
 import logo from './images/logo.png'
 import useLocalStorage from './hooks/useLocalStorage';
 
@@ -32,7 +33,8 @@ function App() {
 
         <main className="app-main max-w-4xl mx-auto p-4">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/home" element={<Home />} />
           </Routes>
         </main>
         </div>
