@@ -45,10 +45,12 @@ export default function Landing() {
     if (!firstName) errs.firstName = 'First name is required';
     if (!signupEmail) errs.email = 'Email is required';
     else if (!validateEmail(signupEmail)) errs.email = 'Enter a valid email';
-    if (!signupPassword) errs.password = 'Password is required';
+  if (!signupPassword) errs.password = 'Password is required';
     else if (signupPassword.length < 6) errs.password = 'Password must be at least 6 characters';
-    if (confirmPassword !== signupPassword) errs.confirmPassword = 'Passwords do not match';
+  if (!confirmPassword) errs.confirmPassword = 'Confirm password is required';
+  else if (confirmPassword !== signupPassword) errs.confirmPassword = 'Passwords do not match';
     if (mobile && !validateMobile(mobile)) errs.mobile = 'Enter a valid mobile number';
+  if (!agree) errs.agree = 'You must agree to the terms';
     setSignupErrors(errs);
     if (Object.keys(errs).length === 0) {
       // submit signup (API call)
@@ -83,8 +85,11 @@ export default function Landing() {
           <Input name="mobile" label="Mobile" value={mobile} onChange={(v)=>setMobile(v)} errorText={signupErrors.mobile} />
           <Input name="password" type="password" label="Password" value={signupPassword} onChange={(v)=>setSignupPassword(v)} errorText={signupErrors.password} />
           <Input name="confirmPassword" type="password" label="Confirm password" value={confirmPassword} onChange={(v)=>setConfirmPassword(v)} errorText={signupErrors.confirmPassword} />
-          <div style={{display:'flex', alignItems:'center', gap:8}}>
-            <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
+          <div style={{display:'flex', flexDirection: 'column', gap:8}}>
+            <div style={{display:'flex', alignItems:'center', gap:8}}>
+              <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
+            </div>
+            {signupErrors.agree && <div style={{color: 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
           </div>
           <div style={{display:'flex', gap:8, marginTop:6}}>
             <Button variant="contained" onClick={doSignup} sx={{flex:1}}>Create account</Button>
