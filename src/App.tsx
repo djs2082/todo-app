@@ -10,7 +10,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className={`app-shell min-h-screen ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
+        <div className={`app-shell min-h-screen ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
         <header className="app-header">
           <div className="max-w-4xl mx-auto">
             <div className="app-header-row">
@@ -35,7 +35,7 @@ function App() {
             <Route path="/" element={<Home />} />
           </Routes>
         </main>
-      </div>
+        </div>
     </BrowserRouter>
   );
 }
