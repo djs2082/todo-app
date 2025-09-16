@@ -44,7 +44,7 @@ export default class HomeViewModel {
     return this.getDay(date).tasks;
   }
 
-  addTask(date: ISODate, task: Partial<TaskData> & { title: string; priority?: Priority; status?: Status }) {
+  async addTask(date: ISODate, task: Partial<TaskData> & { title: string; priority?: Priority; status?: Status }) {
     const day = this.getDay(date);
     const t = day.addTask({
       title: task.title,
@@ -55,6 +55,37 @@ export default class HomeViewModel {
       status: task.status ?? Status.Pending,
     });
     this.notify();
+
+    // If user is authenticated, try to create the task on server
+    try {
+      const token = localStorage.getItem('auth_token');
+      console.log(token)
+      if (token) {
+        // import lazily to avoid circular deps at module load
+        // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+        const api = require('../../lib/api').default;
+        const payload = {
+          title: t.title,
+          description: t.description,
+          priority: t.priority,
+          dueDate: t.dueDate,
+          dueTime: t.dueTime,
+          status: t.status,
+        };
+        const server = await api.createTask(payload);
+        // if server returns canonical id/date, update local task
+        if (server && server.id) {
+          t.id = server.id;
+          if (server.createdAt) t.createdAt = server.createdAt;
+          if (server.updatedAt) t.updatedAt = server.updatedAt;
+          this.notify();
+        }
+      }
+    } catch (e) {
+      // ignore remote failures; local task already created
+      // could enqueue retry logic here
+      // console.warn('createTask failed', e);
+    }
     return t;
   }
 

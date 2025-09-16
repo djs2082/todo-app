@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Button, Checkbox, Modal } from '../../components/ui';
+import { Input, Button, Checkbox, Modal, useToast } from '../../components/ui';
+import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api';
 import './landing.css';
 
 function validateEmail(v: string) {
@@ -11,7 +13,10 @@ function validateMobile(v: string) {
 }
 
 export default function Landing() {
+  const toast = useToast();
+  const navigate = useNavigate();
   const [signupOpen, setSignupOpen] = useState(false);
+  const bg = `${process.env.PUBLIC_URL || ''}/images/landing-bg2.png`;
 
   // login state
   const [loginEmail, setLoginEmail] = useState('');
@@ -36,7 +41,18 @@ export default function Landing() {
     setLoginErrors(errs);
     if (Object.keys(errs).length === 0) {
       // perform login action (API call)
-      console.log('login', { loginEmail, loginPassword });
+      setLoginLoading(true);
+      api.login(loginEmail, loginPassword).then((res:any)=>{
+        // expected res contains token
+        if (res?.token) localStorage.setItem('auth_token', res.token);
+        toast.show('Logged in', 'success');
+        navigate('/tasks');
+        console.log('login success', res);
+      }).catch((err:any)=>{
+        const msg = err?.body?.message || err.message || 'Login failed';
+        setLoginErrors({ email: msg });
+        toast.show(msg, 'error');
+      }).finally(()=>setLoginLoading(false));
     }
   };
 
@@ -53,24 +69,35 @@ export default function Landing() {
   if (!agree) errs.agree = 'You must agree to the terms';
     setSignupErrors(errs);
     if (Object.keys(errs).length === 0) {
-      // submit signup (API call)
-      console.log('signup', { firstName, lastName, signupEmail, mobile });
-      setSignupOpen(false);
+      setSignupLoading(true);
+      api.signup({ firstName, lastName, email: signupEmail, mobile, password: signupPassword }).then((res:any)=>{
+        toast.show('Account created', 'success');
+        console.log('signup success', res);
+        setSignupOpen(false);
+      }).catch((err:any)=>{
+        const msg = err?.body?.message || err.message || 'Signup failed';
+        setSignupErrors({ ...errs, email: msg });
+        toast.show(msg, 'error');
+      }).finally(()=>setSignupLoading(false));
     }
   };
 
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
+
   return (
-    <div className="landing-root">
+    <div className="landing-root" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
+      <div className="landing-overlay" />
       <div className="landing-card">
         <div className="landing-brand">KARYA</div>
         <div className="landing-sub">Beautiful tasks, built for focus</div>
 
         <div className="landing-form">
-          <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>setLoginEmail(v)} errorText={loginErrors.email} />
-          <Input name="password" type="password" label="Password" value={loginPassword} onChange={(v)=>setLoginPassword(v)} errorText={loginErrors.password} />
+          <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>{ setLoginEmail(v); if (loginErrors.email) setLoginErrors({}); }} errorText={loginErrors.email} />
+          <Input name="password" type="password" label="Password" value={loginPassword} onChange={(v)=>{ setLoginPassword(v); if (loginErrors.password) setLoginErrors({}); }} errorText={loginErrors.password} />
           <div style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 8}}>
-            <Button variant="contained" onClick={doLogin} sx={{flex: 1}}>Log in</Button>
-            <Button variant="outlined" onClick={()=>setSignupOpen(true)}>Sign up</Button>
+            <Button variant="contained" onClick={doLogin} sx={{flex: 1}} disabled={loginLoading}>{loginLoading ? 'Signing in...' : 'Log in'}</Button>
+            <Button variant="outlined" onClick={()=>setSignupOpen(true)} disabled={signupLoading}>Sign up</Button>
           </div>
         </div>
 
@@ -78,22 +105,24 @@ export default function Landing() {
       </div>
 
       <Modal open={signupOpen} title={<div>Sign up to KARYA</div>} onClose={()=>setSignupOpen(false)} maxWidth={560}>
-        <div style={{display:'grid', gap:12}}>
-          <Input name="firstName" label="First name" value={firstName} onChange={(v)=>setFirstName(v)} errorText={signupErrors.firstName} />
-          <Input name="lastName" label="Last name" value={lastName} onChange={(v)=>setLastName(v)} />
-          <Input name="email" type="email" label="Email" value={signupEmail} onChange={(v)=>setSignupEmail(v)} errorText={signupErrors.email} />
-          <Input name="mobile" label="Mobile" value={mobile} onChange={(v)=>setMobile(v)} errorText={signupErrors.mobile} />
-          <Input name="password" type="password" label="Password" value={signupPassword} onChange={(v)=>setSignupPassword(v)} errorText={signupErrors.password} />
-          <Input name="confirmPassword" type="password" label="Confirm password" value={confirmPassword} onChange={(v)=>setConfirmPassword(v)} errorText={signupErrors.confirmPassword} />
-          <div style={{display:'flex', flexDirection: 'column', gap:8}}>
-            <div style={{display:'flex', alignItems:'center', gap:8}}>
-              <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
+        <div className="landing-modal-content">
+          <div style={{display:'grid', gap:12}}>
+            <Input name="firstName" label="First name" value={firstName} onChange={(v)=>{ setFirstName(v); if (signupErrors.firstName) setSignupErrors((s)=>({ ...s, firstName: undefined })); }} errorText={signupErrors.firstName} />
+            <Input name="lastName" label="Last name" value={lastName} onChange={(v)=>setLastName(v)} />
+            <Input name="email" type="email" label="Email" value={signupEmail} onChange={(v)=>{ setSignupEmail(v); if (signupErrors.email) setSignupErrors((s)=>({ ...s, email: undefined })); }} errorText={signupErrors.email} />
+            <Input name="mobile" label="Mobile" value={mobile} onChange={(v)=>{ setMobile(v); if (signupErrors.mobile) setSignupErrors((s)=>({ ...s, mobile: undefined })); }} errorText={signupErrors.mobile} />
+            <Input name="password" type="password" label="Password" value={signupPassword} onChange={(v)=>{ setSignupPassword(v); if (signupErrors.password) setSignupErrors((s)=>({ ...s, password: undefined })); }} errorText={signupErrors.password} />
+            <Input name="confirmPassword" type="password" label="Confirm password" value={confirmPassword} onChange={(v)=>{ setConfirmPassword(v); if (signupErrors.confirmPassword) setSignupErrors((s)=>({ ...s, confirmPassword: undefined })); }} errorText={signupErrors.confirmPassword} />
+            <div style={{display:'flex', flexDirection: 'column', gap:8}}>
+              <div style={{display:'flex', alignItems:'center', gap:8}}>
+                <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
+              </div>
+              {signupErrors.agree && <div style={{color: 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
             </div>
-            {signupErrors.agree && <div style={{color: 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
-          </div>
-          <div style={{display:'flex', gap:8, marginTop:6}}>
-            <Button variant="contained" onClick={doSignup} sx={{flex:1}}>Create account</Button>
-            <Button variant="text" onClick={()=>setSignupOpen(false)}>Cancel</Button>
+            <div style={{display:'flex', gap:8, marginTop:6}}>
+              <Button variant="contained" onClick={doSignup} sx={{flex:1}} disabled={signupLoading}>{signupLoading ? 'Creating...' : 'Create account'}</Button>
+              <Button variant="text" onClick={()=>setSignupOpen(false)}>Cancel</Button>
+            </div>
           </div>
         </div>
       </Modal>
