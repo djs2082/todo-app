@@ -103,4 +103,6 @@ export async function createTask(payload: { title: string; description?: string;
   return apiFetch('/tasks', { method: 'POST', body });
 }
 
-export default { login, signup, addRequestInterceptor, addResponseInterceptor };
+const api = { login, signup, addRequestInterceptor, addResponseInterceptor };
+
+export default api;
