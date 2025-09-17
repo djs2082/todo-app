@@ -204,14 +204,172 @@
   transition: all 0.3s ease;
 }
 
-.landing-root.theme-dark .landing-modal-content {
+/* Modal content for dark theme */
+.landing-root.theme-dark .landing-modal-content,
+.theme-dark .landing-modal-content {
   background: rgba(10,10,12,0.6);
   color: #fff;
 }
 
-.landing-root.theme-light .landing-modal-content {
+/* Modal content for light theme */
+.landing-root.theme-light .landing-modal-content,
+.theme-light .landing-modal-content {
   background: rgba(255,255,255,0.85);
   color: rgba(0,0,0,0.87);
 }
 
-/* The modal inside the landing page inherits styles from the theme class */
+/* Form inputs for dark theme */
+.landing-root.theme-dark .landing-modal-content .MuiFormControl-root,
+.theme-dark .landing-modal-content .MuiFormControl-root{ width:100% }
+.landing-root.theme-dark .landing-modal-content .MuiOutlinedInput-root,
+.theme-dark .landing-modal-content .MuiOutlinedInput-root{ background: rgba(0,0,0,0.6); border-radius: 8px; }
+.landing-root.theme-dark .landing-modal-content .MuiOutlinedInput-notchedOutline,
+.theme-dark .landing-modal-content .MuiOutlinedInput-notchedOutline{ border-color: rgba(255,255,255,0.12); }
+.landing-root.theme-dark .landing-modal-content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.theme-dark .landing-modal-content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{ border-color: rgba(255,255,255,0.95); border-width: 1px; }
+.landing-root.theme-dark .landing-modal-content .MuiInputLabel-root,
+.theme-dark .landing-modal-content .MuiInputLabel-root{ color: rgba(255,255,255,0.7) }
+.landing-root.theme-dark .landing-modal-content .MuiInputLabel-root.Mui-focused,
+.theme-dark .landing-modal-content .MuiInputLabel-root.Mui-focused{ color: #fff }
+.landing-root.theme-dark .landing-modal-content .MuiInputBase-input,
+.theme-dark .landing-modal-content .MuiInputBase-input{ color: #fff }
+.landing-root.theme-dark .landing-modal-content .MuiInputBase-input::placeholder,
+.theme-dark .landing-modal-content .MuiInputBase-input::placeholder{ color: rgba(255,255,255,0.45) }
+.landing-root.theme-dark .landing-modal-content .MuiFormHelperText-root,
+.theme-dark .landing-modal-content .MuiFormHelperText-root{ color: #ffb4b4 }
+
+/* Form inputs for light theme */
+.landing-root.theme-light .landing-modal-content .MuiFormControl-root,
+.theme-light .landing-modal-content .MuiFormControl-root{ width:100% }
+.landing-root.theme-light .landing-modal-content .MuiOutlinedInput-root,
+.theme-light .landing-modal-content .MuiOutlinedInput-root{ background: rgba(255,255,255,0.9); border-radius: 8px; }
+.landing-root.theme-light .landing-modal-content .MuiOutlinedInput-notchedOutline,
+.theme-light .landing-modal-content .MuiOutlinedInput-notchedOutline{ border-color: rgba(0,0,0,0.2); }
+.landing-root.theme-light .landing-modal-content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.theme-light .landing-modal-content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{ border-color: rgba(25,118,210,0.9); border-width: 1px; }
+.landing-root.theme-light .landing-modal-content .MuiInputLabel-root,
+.theme-light .landing-modal-content .MuiInputLabel-root{ color: rgba(0,0,0,0.7) }
+.landing-root.theme-light .landing-modal-content .MuiInputLabel-root.Mui-focused,
+.theme-light .landing-modal-content .MuiInputLabel-root.Mui-focused{ color: #1976d2 }
+.landing-root.theme-light .landing-modal-content .MuiInputBase-input,
+.theme-light .landing-modal-content .MuiInputBase-input{ color: rgba(0,0,0,0.87) }
+.landing-root.theme-light .landing-modal-content .MuiInputBase-input::placeholder,
+.theme-light .landing-modal-content .MuiInputBase-input::placeholder{ color: rgba(0,0,0,0.4) }
+.landing-root.theme-light .landing-modal-content .MuiFormHelperText-root,
+.theme-light .landing-modal-content .MuiFormHelperText-root{ color: #d32f2f }
+
+/* Autofill overrides for dark theme */
+.landing-root.theme-dark .landing-modal-content input:-webkit-autofill,
+.landing-root.theme-dark .landing-modal-content input:-webkit-autofill:focus,
+.landing-root.theme-dark .landing-modal-content textarea:-webkit-autofill,
+.landing-root.theme-dark .landing-modal-content textarea:-webkit-autofill:focus,
+.landing-root.theme-dark .landing-modal-content .MuiOutlinedInput-input:-webkit-autofill,
+.theme-dark .landing-modal-content input:-webkit-autofill,
+.theme-dark .landing-modal-content input:-webkit-autofill:focus,
+.theme-dark .landing-modal-content textarea:-webkit-autofill,
+.theme-dark .landing-modal-content textarea:-webkit-autofill:focus,
+.theme-dark .landing-modal-content .MuiOutlinedInput-input:-webkit-autofill{
+  -webkit-text-fill-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0.6) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0.6) inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Autofill overrides for light theme */
+.landing-root.theme-light .landing-modal-content input:-webkit-autofill,
+.landing-root.theme-light .landing-modal-content input:-webkit-autofill:focus,
+.landing-root.theme-light .landing-modal-content textarea:-webkit-autofill,
+.landing-root.theme-light .landing-modal-content textarea:-webkit-autofill:focus,
+.landing-root.theme-light .landing-modal-content .MuiOutlinedInput-input:-webkit-autofill,
+.theme-light .landing-modal-content input:-webkit-autofill,
+.theme-light .landing-modal-content input:-webkit-autofill:focus,
+.theme-light .landing-modal-content textarea:-webkit-autofill,
+.theme-light .landing-modal-content textarea:-webkit-autofill:focus,
+.theme-light .landing-modal-content .MuiOutlinedInput-input:-webkit-autofill{
+  -webkit-text-fill-color: rgba(0,0,0,0.87) !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255,255,255,0.9) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(255,255,255,0.9) inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Firefox autofill for dark theme */
+.landing-root.theme-dark .landing-modal-content input:-moz-autofill,
+.landing-root.theme-dark .landing-modal-content textarea:-moz-autofill,
+.theme-dark .landing-modal-content input:-moz-autofill,
+.theme-dark .landing-modal-content textarea:-moz-autofill{
+  box-shadow: inset 0 0 0px 1000px rgba(0,0,0,0.6) !important;
+  color: #fff !important;
+}
+
+/* Firefox autofill for light theme */
+.landing-root.theme-light .landing-modal-content input:-moz-autofill,
+.landing-root.theme-light .landing-modal-content textarea:-moz-autofill,
+.theme-light .landing-modal-content input:-moz-autofill,
+.theme-light .landing-modal-content textarea:-moz-autofill{
+  box-shadow: inset 0 0 0px 1000px rgba(255,255,255,0.9) !important;
+  color: rgba(0,0,0,0.87) !important;
+}
+
+/* Button styling for dark theme */
+.landing-root.theme-dark .landing-modal-content .MuiButton-contained,
+.theme-dark .landing-modal-content .MuiButton-contained{
+  background: linear-gradient(180deg, #000, #0a0a0a);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.85);
+}
+.landing-root.theme-dark .landing-modal-content .MuiButton-contained:hover,
+.theme-dark .landing-modal-content .MuiButton-contained:hover{
+  background: linear-gradient(180deg, #111, #050505);
+  transform: translateY(-1px);
+}
+.landing-root.theme-dark .landing-modal-content .MuiButton-outlined,
+.landing-root.theme-dark .landing-modal-content .MuiButton-text,
+.theme-dark .landing-modal-content .MuiButton-outlined,
+.theme-dark .landing-modal-content .MuiButton-text{ 
+  color: rgba(255,255,255,0.85); 
+  border-color: rgba(255,255,255,0.12) 
+}
+
+/* Button styling for light theme */
+.landing-root.theme-light .landing-modal-content .MuiButton-contained,
+.theme-light .landing-modal-content .MuiButton-contained{
+  background: linear-gradient(180deg, #1976d2, #1565c0);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: none;
+}
+.landing-root.theme-light .landing-modal-content .MuiButton-contained:hover,
+.theme-light .landing-modal-content .MuiButton-contained:hover{
+  background: linear-gradient(180deg, #1976d2, #0d47a1);
+  transform: translateY(-1px);
+}
+.landing-root.theme-light .landing-modal-content .MuiButton-outlined,
+.landing-root.theme-light .landing-modal-content .MuiButton-text,
+.theme-light .landing-modal-content .MuiButton-outlined,
+.theme-light .landing-modal-content .MuiButton-text{ 
+  color: #1976d2; 
+  border-color: rgba(25,118,210,0.5) 
+}
+
+/* Checkbox labels for dark theme */
+.landing-root.theme-dark .landing-modal-content .MuiFormControlLabel-root,
+.landing-root.theme-dark .landing-modal-content .MuiTypography-root,
+.theme-dark .landing-modal-content .MuiFormControlLabel-root,
+.theme-dark .landing-modal-content .MuiTypography-root {
+  color: rgba(255,255,255,0.95);
+}
+
+/* Checkbox labels for light theme */
+.landing-root.theme-light .landing-modal-content .MuiFormControlLabel-root,
+.landing-root.theme-light .landing-modal-content .MuiTypography-root,
+.theme-light .landing-modal-content .MuiFormControlLabel-root,
+.theme-light .landing-modal-content .MuiTypography-root {
+  color: rgba(0,0,0,0.87);
+}

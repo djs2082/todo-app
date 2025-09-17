@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Button, Checkbox, Modal, useToast } from '../../components/ui';
+import Robot from '../../components/ui/Robot/Robot';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 import { useTheme } from '../../context/ThemeContext';
@@ -95,6 +96,7 @@ export default function Landing() {
         <div className="landing-sub">Beautiful tasks, built for focus</div>
 
         <div className="landing-form">
+          <Robot hide={true}/>
           <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>{ setLoginEmail(v); if (loginErrors.email) setLoginErrors({}); }} errorText={loginErrors.email} />
           <Input name="password" type="password" label="Password" value={loginPassword} onChange={(v)=>{ setLoginPassword(v); if (loginErrors.password) setLoginErrors({}); }} errorText={loginErrors.password} />
           <div style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 8}}>
@@ -107,7 +109,7 @@ export default function Landing() {
       </div>
 
       <Modal open={signupOpen} title={<div>Sign up to KARYA</div>} onClose={()=>setSignupOpen(false)} maxWidth={560}>
-        <div className="landing-modal-content">
+        <div className={`landing-modal-content`}>
           <div style={{display:'grid', gap:12}}>
             <Input name="firstName" label="First name" value={firstName} onChange={(v)=>{ setFirstName(v); if (signupErrors.firstName) setSignupErrors((s)=>({ ...s, firstName: undefined })); }} errorText={signupErrors.firstName} />
             <Input name="lastName" label="Last name" value={lastName} onChange={(v)=>setLastName(v)} />
@@ -119,7 +121,7 @@ export default function Landing() {
               <div style={{display:'flex', alignItems:'center', gap:8}}>
                 <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
               </div>
-              {signupErrors.agree && <div style={{color: 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
+              {signupErrors.agree && <div style={{color: theme === 'dark' ? 'rgb(211, 47, 47)' : 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
             </div>
             <div style={{display:'flex', gap:8, marginTop:6}}>
               <Button variant="contained" onClick={doSignup} sx={{flex:1}} disabled={signupLoading}>{signupLoading ? 'Creating...' : 'Create account'}</Button>

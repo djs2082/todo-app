@@ -13,7 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Provider component
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'light');
+  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'dark');
   
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
