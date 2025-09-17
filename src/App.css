@@ -19,6 +19,7 @@
 .app-main {
   flex: 1;
   overflow: hidden;
+  height: calc( 100vh - 60px )
   /* padding: 1rem; */
 }
 

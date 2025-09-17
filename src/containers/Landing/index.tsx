@@ -88,7 +88,7 @@ export default function Landing() {
   const [signupLoading, setSignupLoading] = useState(false);
 
   return (
-    <div className="landing-root" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
+    <div className={`landing-root ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
       <div className="landing-overlay" />
       <div className="landing-card">
         <div className="landing-brand">KARYA</div>
