@@ -138,7 +138,7 @@
 
 /* app shell: header sticky + main scrollable */
 .app-shell { display: flex; flex-direction: column; min-height: 100vh; }
-.app-header { position: sticky; top: 0; z-index: 40; }
+/* .app-header { position: sticky; top: 0; z-index: 40; } */
 .app-main { flex: 1 1 auto; overflow: auto; }
 
 /* ensure max width container centers and doesn't create horizontal scroll */

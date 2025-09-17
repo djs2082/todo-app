@@ -4,18 +4,30 @@ import Home from './containers/Home';
 import Landing from './containers/Landing';
 import { ToastProvider } from './components/ui';
 import logo from './images/logo.png'
-import useLocalStorage from './hooks/useLocalStorage';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+
+const pathsToExcludeHeader:string[] = []
 
 function App() {
-  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light');
-  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <ToastProvider>
+          <Shell />
+        </ToastProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
+}
 
-  function Shell() {
-    const location = useLocation();
-    const hideHeader = location.pathname === '/';
-    return (
-      <div className={`app-shell min-h-screen ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
-        {!hideHeader && (
+function Shell() {
+  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+
+  const hideHeader = pathsToExcludeHeader.includes(location.pathname)
+  return (
+    <div className={`app-shell min-h-screen ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
+      {!hideHeader && (
           <header className="app-header">
             <div className="max-w-4xl mx-auto">
               <div className="app-header-row">
@@ -45,14 +57,5 @@ function App() {
       </div>
     );
   }
-
-  return (
-    <BrowserRouter>
-      <ToastProvider>
-        <Shell />
-      </ToastProvider>
-    </BrowserRouter>
-  );
-}
 
 export default App;

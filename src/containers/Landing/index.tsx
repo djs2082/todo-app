@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button, Checkbox, Modal, useToast } from '../../components/ui';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
+import { useTheme } from '../../context/ThemeContext';
 import './landing.css';
 
 function validateEmail(v: string) {
@@ -15,8 +16,9 @@ function validateMobile(v: string) {
 export default function Landing() {
   const toast = useToast();
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [signupOpen, setSignupOpen] = useState(false);
-  const bg = `${process.env.PUBLIC_URL || ''}/images/landing-bg2.png`;
+  const bg = `${process.env.PUBLIC_URL || ''}/images/landing-bg_${theme === 'dark' ? 'dark' : 'light'}.png`;
 
   // login state
   const [loginEmail, setLoginEmail] = useState('');
