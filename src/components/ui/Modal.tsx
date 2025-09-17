@@ -123,6 +123,4 @@ export default function Modal({ open, title, onClose, children, maxWidth }: Moda
   );
   
   return ReactDOM.createPortal(overlay, document.body);
-
-  return ReactDOM.createPortal(overlay, document.body);
 }

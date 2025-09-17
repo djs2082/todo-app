@@ -5,7 +5,6 @@ import { useTheme } from '../../../context/ThemeContext'
 
 export default function PasswordRobot({ hide = false }) {
   const controls = useAnimation()
-  const { theme } = useTheme()
 
   React.useEffect(() => {
     if (!hide) {
