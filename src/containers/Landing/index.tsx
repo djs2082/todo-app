@@ -25,6 +25,7 @@ export default function Landing() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState<{ email?: string; password?: string }>({});
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   // signup state
   const [firstName, setFirstName] = useState('');
@@ -96,9 +97,18 @@ export default function Landing() {
         <div className="landing-sub">Beautiful tasks, built for focus</div>
 
         <div className="landing-form">
-          <Robot hide={true}/>
+          <Robot hide={isPasswordFocused}/>
           <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>{ setLoginEmail(v); if (loginErrors.email) setLoginErrors({}); }} errorText={loginErrors.email} />
-          <Input name="password" type="password" label="Password" value={loginPassword} onChange={(v)=>{ setLoginPassword(v); if (loginErrors.password) setLoginErrors({}); }} errorText={loginErrors.password} />
+          <Input 
+            name="password" 
+            type="password" 
+            label="Password" 
+            value={loginPassword} 
+            onChange={(v)=>{ setLoginPassword(v); if (loginErrors.password) setLoginErrors({}); }} 
+            errorText={loginErrors.password}
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
+          />
           <div style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 8}}>
             <Button variant="contained" onClick={doLogin} sx={{flex: 1}} disabled={loginLoading}>{loginLoading ? 'Signing in...' : 'Log in'}</Button>
             <Button variant="outlined" onClick={()=>setSignupOpen(true)} disabled={signupLoading}>Sign up</Button>

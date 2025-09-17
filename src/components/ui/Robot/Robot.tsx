@@ -1,14 +1,18 @@
 import React from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import './Robot.css'
+import { useTheme } from '../../../context/ThemeContext'
 
 export default function PasswordRobot({ hide = false }) {
   const controls = useAnimation()
+  const { theme } = useTheme()
 
   React.useEffect(() => {
     if (!hide) {
-      controls.start({ rotate: [0, -18, 18, -12, 12, 0], transition: { repeat: Infinity, duration: 2 } })
+      // Start gentle rotation when visible
+      controls.start({ rotate: [0, -5, 5, -3, 3, 0], transition: { repeat: Infinity, duration: 2 } })
     } else {
+      // Stop animation when hidden
       controls.stop()
       controls.set({ rotate: 0 })
     }
@@ -16,81 +20,82 @@ export default function PasswordRobot({ hide = false }) {
 
   return (
     <div className="robot-container">
-      <div className="robot-wrapper">
-        {/* Body */}
-        <div className="robot-body-wrapper">
-          <motion.div
-            className="robot-body"
-            initial={{ y: 10 }}
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+      <motion.div className="robot-wrapper" animate={controls}>
+        {/* Circle around the head */}
+        <div className={`robot-circle ${hide ? 'shutter-down' : ''}`}>
+          {/* NPM-style shutter that slides down when hide is true */}
+          <motion.div 
+            className="robot-shutter"
+            initial={{ y: -160 }}
+            animate={{ y: hide ? 0 : -160 }}
+            transition={{ 
+              type: 'spring', 
+              stiffness: 400, 
+              damping: 30
+            }}
           >
-            {/* Head */}
-            <div className="robot-head">
-              {/* Eyes */}
-              <div className="robot-eyes">
-                <motion.div
-                  className="eye"
-                  animate={hide ? { scale: 0.1, opacity: 0 } : { scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.18 }}
-                />
-                <motion.div
-                  className="eye"
-                  animate={hide ? { scale: 0.1, opacity: 0 } : { scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.18, delay: 0.02 }}
-                />
+            <div className="npm-logo-container">
+              <div className="shutter-strip">
+                <span className="shutter-strip-text">KARYA</span>
               </div>
-
-              {/* Hands that cover eyes */}
-              <motion.div
-                className="hand hand-left"
-                initial={{ rotate: -12, x: -10, y: 0 }}
-                animate={hide ? { x: 18, y: -20, rotate: -36 } : { x: -10, y: 0, rotate: -12 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 24 }}
-              />
-              <motion.div
-                className="hand hand-right"
-                initial={{ rotate: 12, x: 10, y: 0 }}
-                animate={hide ? { x: -18, y: -20, rotate: 36 } : { x: 10, y: 0, rotate: 12 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 24 }}
-              />
-            </div>
-
-            {/* Torso */}
-            <div className="robot-torso">
-              <div className="torso-text">Passbot</div>
-            </div>
-
-            {/* Legs */}
-            <div className="robot-legs">
-              <div className="leg" />
-              <div className="leg" />
             </div>
           </motion.div>
         </div>
+        
+        {/* Head */}
+        <div className="robot-head">
+          {/* Face */}
+          <div className="robot-face">
+            {/* Eyes and mouth */}
+            <div className="face-elements">
+              <motion.div
+                className="eye"
+                animate={hide ? 
+                  { opacity: 0, scale: 0.8 } : 
+                  { opacity: 1, scale: 1 }
+                }
+                transition={{ duration: 0.2 }}
+              />
+              <motion.div
+                className="mouth"
+                animate={hide ? 
+                  { opacity: 0, scaleX: 0.6 } : 
+                  { opacity: 1, scaleX: 1 }
+                }
+                transition={{ duration: 0.3 }}
+              />
+              <motion.div
+                className="eye"
+                animate={hide ? 
+                  { opacity: 0, scale: 0.8 } : 
+                  { opacity: 1, scale: 1 }
+                }
+                transition={{ duration: 0.2, delay: 0.05 }}
+              />
+            </div>
 
-        {/* Left arm (waving) */}
-        <motion.div
-          className="arm arm-left"
-          animate={controls}
-        >
-          <div className="arm-segment">
-            <div className="hand-end" />
+            {/* Hands that cover eyes - now move down when hiding as shutter comes down */}
+            <motion.div
+              className="cover-hand left"
+              initial={{ y: 0, x: 0 }}
+              animate={hide ? 
+                { y: 20, x: 0, opacity: 0 } : 
+                { y: 0, x: 0, opacity: 1 }
+              }
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            />
+            <motion.div
+              className="cover-hand right"
+              initial={{ y: 0, x: 0 }}
+              animate={hide ? 
+                { y: 20, x: 0, opacity: 0 } : 
+                { y: 0, x: 0, opacity: 1 }
+              }
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            />
           </div>
-        </motion.div>
-
-        {/* Right arm (static, also used to cover) */}
-        <motion.div
-          className="arm arm-right"
-          animate={hide ? { rotate: -40, x: -10, y: -12 } : { rotate: 0, x: 0, y: 0 }}
-          transition={{ type: 'spring', stiffness: 600, damping: 22 }}
-        >
-          <div className="arm-segment">
-            <div className="hand-end" />
-          </div>
-        </motion.div>
-
-      </div>
+        </div>
+      </motion.div>
     </div>
   )
 }

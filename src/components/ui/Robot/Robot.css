@@ -1,124 +1,326 @@
+/* PasswordRobot.css */
 .robot-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 16px;
 }
 .robot-wrapper {
   position: relative;
-  width: 256px;
-  height: 256px;
-}
-.robot-body-wrapper {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.robot-body {
-  width: 176px;
-  height: 208px;
-  background: linear-gradient(to bottom, #f5f5f5, #e5e5e5);
-  border-radius: 16px;
-  border: 1px solid #d1d5db;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  width: 160px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 24px;
+  justify-content: center;
+}
+.robot-circle {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 2px solid #555555; /* Darker border that won't stand out */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: linear-gradient(145deg, rgba(40,40,40,0.4), rgba(30,30,30,0.3));
+  z-index: 10; /* Higher than robot-head */
+  overflow: hidden; /* Important to keep the shutter contained within the circle */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for border changes */
+}
+
+/* Remove white border when shutter is down */
+.robot-circle.shutter-down {
+  border-color: #333333; /* Match the shutter color */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+
+/* NPM-style shutter that slides down from top */
+.robot-shutter {
+  position: absolute;
+  width: 100%;
+  height: 80%; /* Cover 80% of the circle; 20% remains visible */
+  background: #333333; /* Dark gray like NPM logo background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 100; /* Much higher than everything else */
+  overflow: hidden;
+}
+
+/* NPM logo container - this is the empty container without a border */
+.npm-logo-container {
+  margin-top: 8px;
+  width: 100%; /* span full width like a strip */
+  height: 36px; /* slim strip height */
+  padding: 0 8px; /* avoid touching the edges */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Image logo in the shutter */
+.shutter-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* keep aspect ratio while spanning width */
+  display: block;
+  filter: none;
+}
+.theme-dark .shutter-logo {
+  /* On white shutter, keep original (dark) logo as-is */
+  filter: none;
+}
+.theme-light .shutter-logo {
+  /* On black shutter, slightly increase brightness/contrast if needed */
+  filter: brightness(1.05) contrast(1.05);
+}
+
+/* HTML/CSS strip logo fallback (moved to top-level) */
+.shutter-strip {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+.theme-dark .shutter-strip {
+  background: #ffffff; /* white strip on dark theme */
+}
+.theme-light .shutter-strip {
+  background: #000000; /* black strip on light theme */
+}
+.shutter-strip-text {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 800; /* bold */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 20px; /* increased size */
+}
+/* Text color mapping: dark theme -> black text, light theme -> white text */
+.theme-dark .shutter-strip-text {
+  color: #000000; /* black text on white strip */
+}
+.theme-light .shutter-strip-text {
+  color: #ffffff; /* white text on black strip */
+}
+
+/* Accent stripe on the shutter for depth (theme-aware) */
+.robot-shutter::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%; /* slightly above center for balance */
+  height: 10px;
+  opacity: 0.9;
+}
+
+/* Stripe colors by theme */
+.theme-dark .robot-shutter::before {
+  /* Dark theme uses white shutter, so a soft gray stripe */
+  background: #eef2f7;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d1d5db;
+}
+.theme-light .robot-shutter::before {
+  /* Light theme uses black shutter, so a charcoal stripe */
+  background: #1f2937;
+  border-top: 1px solid #0b0f14;
+  border-bottom: 1px solid #2b3644;
+}
+
+/* Add a handle to the shutter - the small white/gray rectangle */
+.robot-shutter::after {
+  content: "";
+  position: absolute;
+  bottom: 8px; /* Position near the bottom edge of the shutter */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 6px;
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+/* Theme-aware shutter colors (inverted per request):
+   - Dark theme: white shutter
+   - Light theme: black shutter */
+.theme-dark .robot-shutter {
+  background: #ffffff;
+  box-shadow: inset 0 -2px 8px rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.theme-light .robot-shutter {
+  background: #000000;
+  box-shadow: inset 0 -2px 8px rgba(0,0,0,0.4);
+}
+
+/* Handle color by theme (inverted with shutter) */
+.theme-dark .robot-shutter::after {
+  background: #9aa3af; /* darker gray on white shutter */
+}
+.theme-light .robot-shutter::after {
+  background: #cfd4da; /* lighter gray on black shutter */
+}
+
+/* Theme-aware KARYA plate for contrast on shutter (invert for contrast) */
+.theme-dark .shutter-text {
+  background: #111827; /* dark plate on white shutter */
+  color: #ffffff;
+}
+.theme-light .shutter-text {
+  background: #ffffff; /* light plate on black shutter */
+  color: #111827;
+}
+
+/* Border tone when shutter is down should match shutter background */
+.theme-dark .robot-circle.shutter-down {
+  border-color: #ffffff;
+}
+.theme-light .robot-circle.shutter-down {
+  border-color: #000000;
+}
+
+/* NPM-style logo rectangle - just the white inner box without border */
+.shutter-text {
+  position: relative;
+  z-index: 21;
+  width: 88px;
+  height: 38px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Add subtle texture overlay to the circle/shutter */
+.robot-circle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+  border-radius: 50%;
 }
 .robot-head {
-  position: relative;
-  width: 112px;
-  height: 80px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
+  width: 120px;
+  height: 90px;
+  background: #fff;
+  border-radius: 25px;
+  border: 2px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.robot-eyes {
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+/* HTML/CSS strip logo fallback */
+.shutter-strip {
+  width: 100%;
+  height: 100%;
   display: flex;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+.theme-dark .shutter-strip {
+  background: #ffffff; /* white strip on dark theme */
+}
+.theme-light .shutter-strip {
+  background: #000000; /* black strip on light theme */
+}
+.shutter-strip-text {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.theme-dark .shutter-strip-text {
+  color: #111827; /* black text on white strip */
+}
+.theme-light .shutter-strip-text {
+  color: #ffffff; /* white text on black strip */
+}
+  z-index: 5; /* Lower than the robot circle and shutter */
+  /* Position head to align with the 80% shutter coverage */
+  margin-top: -10px;
+}
+.robot-face {
+  width: 100px;
+  height: 70px;
+  background: #111827;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+}
+.face-elements {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  padding: 0 12px;
 }
 .eye {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: #000;
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
 }
-.hand {
+.mouth {
+  width: 20px;
+  height: 6px;
+  border-radius: 10px;
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+.cover-hand {
   position: absolute;
-  top: 112px;
-  width: 56px;
-  height: 48px;
+  top: 60%;
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(145deg, #f0f0f0, #e5e7eb);
   border-radius: 50%;
-  background: #d1d5db;
-  border: 1px solid #d1d5db;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.hand-left {
-  left: -6%;
-}
-.hand-right {
-  right: -6%;
-}
-.robot-torso {
-  margin-top: 16px;
-  width: 128px;
-  height: 56px;
-  background: linear-gradient(to top, #f1f5f9, #f8fafc);
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+  /* Add cute hand look */
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
-.torso-text {
-  font-size: 14px;
-  color: #6b7280;
+.cover-hand.left {
+  left: -12px;
 }
-.robot-legs {
-  margin-top: 24px;
-  display: flex;
-  gap: 24px;
+.cover-hand.right {
+  right: -12px;
 }
-.leg {
-  width: 24px;
-  height: 40px;
-  background: #d1d5db;
-  border-radius: 4px;
-}
-.arm {
+.cover-hand::after {
+  content: "";
   position: absolute;
-  top: 80px;
-}
-.arm-left {
-  left: 0;
-  transform-origin: top left;
-}
-.arm-right {
-  right: 0;
-  transform-origin: top right;
-}
-.arm-segment {
-  width: 24px;
-  height: 112px;
-  background: #d1d5db;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  transform: translate(-12px, -8px);
-}
-.hand-end {
-  width: 32px;
-  height: 32px;
-  background: #9ca3af;
+  width: 60%;
+  height: 60%;
+  background: rgba(0,0,0,0.03);
   border-radius: 50%;
-  margin-top: 80px;
+  top: 5px;
+  left: 5px;
 }
+/* All body-related styles removed as we're only keeping the head */
