@@ -44,17 +44,30 @@
 
 /* Header override: professional top-left brand bar */
 .app-header {
-  background: linear-gradient(90deg, #0f172a 0%, #111827 60%, #0b1220 100%);
-  color: #ffffff;
   padding: 0.6rem 1rem;
-  box-shadow: 0 6px 24px rgba(2,6,23,0.18);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
   display: flex;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 10;
   height: 60px;
+}
+
+/* Dark theme header (default) */
+.theme-dark .app-header {
+  background: linear-gradient(90deg, #0f172a 0%, #111827 60%, #0b1220 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 24px rgba(2,6,23,0.18);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Light theme header */
+.theme-light .app-header {
+ background: linear-gradient(90deg, #d9d5c7 0%, #e4dfd2 60%, #dad5c8 100%);
+color: #1a1a1a;
+box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+border-bottom: 1px solid rgba(0,0,0,0.1);
+
 }
 
 .app-header { position: sticky; top: 0; z-index: 40; }
@@ -72,14 +85,22 @@
 .app-brand { display: flex; align-items: center; gap: 12px; }
 
 .app-logo {
-  background: linear-gradient(135deg, #ffffff 0%, #e6f4ff 60%, #cfeeff 100%);
-  box-shadow: 0 6px 18px rgba(37,99,235,0.08);
   width: 44px;
   height: 44px;
   border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.theme-dark .app-logo {
+  background: linear-gradient(135deg, #ffffff 0%, #e6f4ff 60%, #cfeeff 100%);
+  box-shadow: 0 6px 18px rgba(37,99,235,0.08);
+}
+
+.theme-light .app-logo {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 60%, #f1f5f9 100%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 .app-logo-img {
@@ -95,10 +116,29 @@
   font-size: 1.125rem;
   letter-spacing: -0.4px;
   margin: 0;
+}
+
+.theme-dark .app-title {
   color: #fff;
 }
 
-.app-title .app-sub { font-size: 0.85rem; opacity: 0.9; margin-left: 6px; color: rgba(255,255,255,0.9); }
+.theme-light .app-title {
+  color: #0f172a;
+}
+
+.app-title .app-sub { 
+  font-size: 0.85rem; 
+  opacity: 0.9; 
+  margin-left: 6px; 
+}
+
+.theme-dark .app-title .app-sub { 
+  color: rgba(255,255,255,0.9); 
+}
+
+.theme-light .app-title .app-sub { 
+  color: rgba(15,23,42,0.8); 
+}
 
 /* make header compact on small screens */
 @media (max-width: 640px) {
@@ -147,14 +187,31 @@
 
 /* Theme toggle button */
 .theme-toggle {
-  background: rgba(255,255,255,0.12);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }
-.theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+/* Dark theme toggle button */
+.theme-dark .theme-toggle {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.theme-dark .theme-toggle:hover { 
+  background: rgba(255,255,255,0.2); 
+}
+
+/* Light theme toggle button */
+.theme-light .theme-toggle {
+  background: rgba(15,23,42,0.06);
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,0.12);
+}
+.theme-light .theme-toggle:hover { 
+  background: rgba(15,23,42,0.12); 
+}
 
 /* Dark theme adjustments */
 .theme-dark .app-main { background: #111827; }
