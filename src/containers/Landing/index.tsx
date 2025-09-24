@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Input, Button, Checkbox, Modal, useToast } from '../../components/ui';
+import { Input, Checkbox, Modal, useToast } from '../../components/ui';
 import Robot from '../../components/ui/Robot/Robot';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 import { useTheme } from '../../context/ThemeContext';
+// import { Button, ButtonThemeProvider, type ButtonTheme } from '@karya_app1/rain-js';
+import RainButton from './../../components/ui/Button';
 import './landing.css';
+import { log } from 'console';
+import Login from '../../components/Login';
+
 
 function validateEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -97,36 +102,53 @@ export default function Landing() {
         <div className="landing-sub">Beautiful tasks, built for focus</div>
 
         <div className="landing-form">
-          <Robot hide={isPasswordFocused}/>
-          <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>{ setLoginEmail(v); if (loginErrors.email) setLoginErrors({}); }} errorText={loginErrors.email} />
+          {/* <Robot hide={isPasswordFocused}/> */}
+          <Login/>
+          {/* <Input name="email" type="email" label="Email" value={loginEmail} onChange={(v)=>{ setLoginEmail(v); if (loginErrors.email) setLoginErrors({}); }} errorText={loginErrors.email} /> */}
+          {/* <Input
+            name="email"
+            color={loginErrors.email ? 'error' : 'primary'}
+            type="email"
+            label="Email"
+            value={loginEmail}
+            error={!!loginErrors.email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{ setLoginEmail(e.target.value); if (loginErrors.email) setLoginErrors({}); }}
+            helperText={loginErrors.email}
+            floatingLabel={true}
+            fullWidth={true}>
+          </Input>
           <Input 
             name="password" 
+            color={loginErrors.password ? 'error' : 'primary'}
             type="password" 
-            label="Password" 
+            label="Password"
+            floatingLabel={true}
+            fullWidth={true}
             value={loginPassword} 
-            onChange={(v)=>{ setLoginPassword(v); if (loginErrors.password) setLoginErrors({}); }} 
-            errorText={loginErrors.password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{ setLoginPassword(e.target.value); if (loginErrors.password) setLoginErrors({}); }}
+            helperText={loginErrors.password}
             onFocus={() => setIsPasswordFocused(true)}
             onBlur={() => setIsPasswordFocused(false)}
-          />
-          <div style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 8}}>
-            <Button variant="contained" onClick={doLogin} sx={{flex: 1}} disabled={loginLoading}>{loginLoading ? 'Signing in...' : 'Log in'}</Button>
-            <Button variant="outlined" onClick={()=>setSignupOpen(true)} disabled={signupLoading}>Sign up</Button>
-          </div>
+          /> */}
+          {/* <div style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 8}}>
+              <RainButton variant="contained" color="secondary" size="large" fullWidth disabled>Forgot password?</RainButton>
+           <RainButton variant="contained" onClick={doLogin} disabled={loginLoading}>{loginLoading ? 'Signing in...' : 'Log in'}</RainButton>
+          <RainButton  color="secondary" variant="contained" onClick={()=>setSignupOpen(true)} disabled={signupLoading}>Sign up</RainButton>
+          </div> */}
         </div>
 
   <div className="landing-footer">By continuing you agree to our <a href="/terms">Terms</a></div>
       </div>
 
-      <Modal open={signupOpen} title={<div>Sign up to KARYA</div>} onClose={()=>setSignupOpen(false)} maxWidth={560}>
+      <Modal show={signupOpen} header={<div>Sign up to KARYA</div>} onClose={()=>setSignupOpen(false)} width={560}>
         <div className={`landing-modal-content`}>
           <div style={{display:'grid', gap:12}}>
-            <Input name="firstName" label="First name" value={firstName} onChange={(v)=>{ setFirstName(v); if (signupErrors.firstName) setSignupErrors((s)=>({ ...s, firstName: undefined })); }} errorText={signupErrors.firstName} />
+            {/* <Input name="firstName" label="First name" value={firstName} onChange={(v)=>{ setFirstName(v); if (signupErrors.firstName) setSignupErrors((s)=>({ ...s, firstName: undefined })); }} errorText={signupErrors.firstName} />
             <Input name="lastName" label="Last name" value={lastName} onChange={(v)=>setLastName(v)} />
             <Input name="email" type="email" label="Email" value={signupEmail} onChange={(v)=>{ setSignupEmail(v); if (signupErrors.email) setSignupErrors((s)=>({ ...s, email: undefined })); }} errorText={signupErrors.email} />
             <Input name="mobile" label="Mobile" value={mobile} onChange={(v)=>{ setMobile(v); if (signupErrors.mobile) setSignupErrors((s)=>({ ...s, mobile: undefined })); }} errorText={signupErrors.mobile} />
             <Input name="password" type="password" label="Password" value={signupPassword} onChange={(v)=>{ setSignupPassword(v); if (signupErrors.password) setSignupErrors((s)=>({ ...s, password: undefined })); }} errorText={signupErrors.password} />
-            <Input name="confirmPassword" type="password" label="Confirm password" value={confirmPassword} onChange={(v)=>{ setConfirmPassword(v); if (signupErrors.confirmPassword) setSignupErrors((s)=>({ ...s, confirmPassword: undefined })); }} errorText={signupErrors.confirmPassword} />
+            <Input name="confirmPassword" type="password" label="Confirm password" value={confirmPassword} onChange={(v)=>{ setConfirmPassword(v); if (signupErrors.confirmPassword) setSignupErrors((s)=>({ ...s, confirmPassword: undefined })); }} errorText={signupErrors.confirmPassword} /> */}
             <div style={{display:'flex', flexDirection: 'column', gap:8}}>
               <div style={{display:'flex', alignItems:'center', gap:8}}>
                 <Checkbox label="I agree to the terms" checked={agree} onChange={(c)=>setAgree(c)} />
@@ -134,8 +156,8 @@ export default function Landing() {
               {signupErrors.agree && <div style={{color: theme === 'dark' ? 'rgb(211, 47, 47)' : 'rgb(211, 47, 47)', fontSize: 13}}>{signupErrors.agree}</div>}
             </div>
             <div style={{display:'flex', gap:8, marginTop:6}}>
-              <Button variant="contained" onClick={doSignup} sx={{flex:1}} disabled={signupLoading}>{signupLoading ? 'Creating...' : 'Create account'}</Button>
-              <Button variant="text" onClick={()=>setSignupOpen(false)}>Cancel</Button>
+              {/* <Button variant="contained" onClick={doSignup} sx={{flex:1}} disabled={signupLoading}>{signupLoading ? 'Creating...' : 'Create account'}</Button>
+              <Button variant="text" onClick={()=>setSignupOpen(false)}>Cancel</Button> */}
             </div>
           </div>
         </div>
