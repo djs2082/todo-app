@@ -36,7 +36,7 @@ img, svg {
   height: calc(100vh - 60px); /* Subtract header height and padding */
   display: flex; 
   flex-direction: column; 
-  background: #f3f4f6;
+  /* background: #f3f4f6; */
   overflow: hidden;
   padding: 1rem;
 }
@@ -422,11 +422,11 @@ img, svg {
 
 /* Dark theme: make home container background dark */
 .theme-dark .home-container {
-  background: #111827;
+  /* background: #111827; */
 }
 
 /* Dark theme: make New Task button white */
-.theme-dark .add-button {
+/* .theme-dark .add-button {
   background: #ffffff !important;
   color: #0b1220 !important;
   border: 1px solid #e5e7eb;
@@ -434,7 +434,7 @@ img, svg {
 }
 .theme-dark .add-button:hover {
   background: #f3f4f6 !important;
-}
+} */
 
 /* Collapsed summary list */
 .collapsed-summary {
@@ -478,8 +478,8 @@ img, svg {
 .collapsed-date { font-size: 0.85rem; opacity: 0.8; text-align: right; }
 
 /* Dark theme adjustments for collapsed list */
-.theme-dark .collapsed-summary { border-top-color: rgba(255,255,255,0.18); }
+/* .theme-dark .collapsed-summary { border-top-color: rgba(255,255,255,0.18); }
 .theme-dark .collapsed-title, 
 .theme-dark .collapsed-date { color: #e5e7eb; }
 .theme-dark .collapsed-head-title,
-.theme-dark .collapsed-head-date { color: rgba(229,231,235,0.7); }
+.theme-dark .collapsed-head-date { color: rgba(229,231,235,0.7); } */

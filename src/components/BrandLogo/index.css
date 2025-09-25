@@ -1,0 +1,49 @@
+/* BrandLogo component styles */
+.brand-wrapper{
+    border: 0 solid;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.brand-container {
+	display: flex;
+	align-items: center;
+    justify-content: space-between;
+    padding-right: 72px;
+	gap: 12px;
+}
+
+.brand-logo-wrapper {
+align-items: center;
+    border-radius: 8px;
+    display: inline-flex;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
+    background: linear-gradient(135deg, #fff, #e6f4ff 60%, #cfeeff);
+    box-shadow: 0 6px 18px #2563eb14;
+}
+
+.brand-logo-img {
+    display: block;
+    height: 80px;
+    object-fit: contain;
+    width: 80px;
+}
+
+.brand-title {
+font-family: Poppins, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -.4px;
+    margin: 0;
+    color: "var(--primary-main)";
+}
+
+.brand-subtitle {
+    font-size: .85rem;
+    font-weight: 600;
+    margin-left: 6px;
+    color: var(--primary-main-hover);
+    opacity: .9;
+}

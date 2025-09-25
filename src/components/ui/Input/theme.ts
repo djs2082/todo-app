@@ -6,10 +6,10 @@ export const lightTheme: Partial<InputTheme> = {
     primary: {
       main: "var(--input-primary-main)",
       hover: "var(--input-primary-hover)",
-      text: "var(--input-primary-text)",
-      border: "var(--input-primary-border)",
-      focus: "var(--input-primary-focus)",
-      helper: "var(--input-primary-helper)",
+      text: "var(--primary-main)",
+      border: "var(--primary-main)",
+      focus: "var(--primary-main-hover)",
+      helper: "var(--primary-main)",
     },
     secondary: {
       main: "var(--input-secondary-main)",
@@ -59,11 +59,11 @@ export const lightTheme: Partial<InputTheme> = {
   },
   borderRadius: "var(--input-border-radius)",
   fontFamily: "var(--input-font-family)",
-  labelColor: "var(--input-label-color)",
-  placeholderColor: "var(--input-placeholder-color)",
-  background: "var(--input-background)",
+  labelColor: "var(--primary-main)",
+  placeholderColor: "var(--primary-main)",
+  background: "var(--secondary-main)",
   borderWidth: "var(--input-border-width)",
-  labelBackground: "var(--input-label-background)",
+  labelBackground: "var(--secondary-main)",
 };
 
 // Dark theme object kept for explicit switching if needed.

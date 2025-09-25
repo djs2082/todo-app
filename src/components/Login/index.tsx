@@ -3,7 +3,11 @@ import Button from '../ui/Button';
 import Robot from '../ui/Robot/Robot';
 import { useLoginForm } from './useLoginForm';
 
-const Login = () => {
+interface LoginProps {
+    setSignupOpen: (val:boolean) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ setSignupOpen }) => {
     const { form, submit, isPasswordFocused } = useLoginForm({
         onSubmit: async (vals) => {
             // Add actual login logic here
@@ -24,7 +28,7 @@ const Login = () => {
                 <Button variant="contained" onClick={submit} disabled={false}>
                     Log in
                 </Button>
-                <Button variant="contained" color="secondary" onClick={submit} disabled={false}>
+                <Button variant="contained" color="secondary" onClick={()=>setSignupOpen(true)} disabled={false}>
                     Sign Up
                 </Button>
             </div>

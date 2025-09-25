@@ -3,14 +3,14 @@ import { type ModalTheme } from "@karya_app1/rain-js";
 const theme: Partial<ModalTheme> = {
   colors: {
     overlay: "rgba(2, 6, 23, 0.7)",
-    surface: "#0b1220",
-    headerBg: "#0f172a",
-    headerText: "#e5e7eb",
-    bodyText: "#e5e7eb",
-    footerBg: "#0f172a",
-    footerText: "#e5e7eb",
-    border: "#334155",
-    shadow: "rgba(0,0,0,0.5)"
+    surface: "var(--secondary-main)",
+    headerBg: "var(--secondary-main)",
+    headerText: "var(--primary-main)",
+    bodyText: "var(--primary-main)",
+    footerBg: "var(--secondary-main)",
+    footerText: "var(--secondary-main)",
+    border: "var(--secondary-main)",
+    shadow: "var(--primary-main-shadow)",
   },
   borderRadius: "12px",
   borderWidth: "1px",

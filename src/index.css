@@ -19,9 +19,12 @@ code {
 
 /* Input theme variables: Light (default) */
 :root {
-  --primary-main: #0f141b;
+  --primary-main: #111827;
   --primary-main-hover: #1a202c;
-  --secondary-main: #ffffff;
+  --secondary-main: #f3f4f6;
+  --primary-main-shadow: rgba(255,255,255,0.5);
+  --secondary-main-shadow: rgba(0,0,0,0.5);
+  --header-bg: linear-gradient(90deg, #d9d5c7, #e4dfd2 60%, #dad5c8);
   --input-primary-main: #1976d2;
   --input-primary-hover: #1565c0;
   --input-primary-text: #0a0a0a;
@@ -77,8 +80,11 @@ code {
 [data-theme="dark"] {
   --primary-main: #ffffff;
   --primary-main-hover: #f2f2f2;
-  --secondary-main: #0f141b;
+  --secondary-main: #162430;
   --secondary-main-hover: #1a202c;
+  --primary-main-shadow: rgba(0,0,0,0.5);
+  --secondary-main-shadow: rgba(255,255,255,0.5);
+  --header-bg: #162430;
   --input-primary-main: #90caf9;
   --input-primary-hover: #64b5f6;
   --input-primary-text: #ffffff;
