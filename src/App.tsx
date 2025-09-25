@@ -1,19 +1,23 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Typography, { TypographyThemeProvider } from '@karya_app1/rain-js';
 import Home from './containers/Home';
 import Landing from './containers/Landing';
 import { ToastProvider } from './components/ui';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import PageLayout from './components/ui/PageLayout';
 import AppHeader from './components/AppHeader';
+import TypographyTheme from './components/ui/Typography/theme'
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
+        <TypographyThemeProvider theme={TypographyTheme}>
         <ToastProvider>
           <Shell />
         </ToastProvider>
+        </TypographyThemeProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

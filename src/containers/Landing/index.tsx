@@ -10,6 +10,8 @@ import './landing.css';
 import { log } from 'console';
 import Login from '../../components/Login';
 import SignUp from '../../components/SignUp';
+import Typography from  '../../components/ui/Typography';
+import Card from '../../components/ui/Card';
 
 
 function validateEmail(v: string) {
@@ -26,6 +28,7 @@ export default function Landing() {
   const { theme } = useTheme();
   const [signupOpen, setSignupOpen] = useState(false);
   const bg = `${process.env.PUBLIC_URL || ''}/images/landing-bg_${theme === 'dark' ? 'dark' : 'light'}.png`;
+  const { Title, SubTitle, FooterText } = Typography;
 
   // login state
   const [loginEmail, setLoginEmail] = useState('');
@@ -96,16 +99,29 @@ export default function Landing() {
   const [signupLoading, setSignupLoading] = useState(false);
 
   return (
+    // <div className={`landing-root ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
+    //   <div className="landing-card">
+      //   <Title>KARYA</Title>
+      //   <SubTitle>Beautiful tasks, built for focus</SubTitle>
+      //   <div className="landing-form">
+      //     <Login setSignupOpen={setSignupOpen} />
+      //   </div>
+      //     <FooterText>By continuing you agree to our <a href="/terms">Terms</a></FooterText>
+      //   </div>
+      // <SignUp show={signupOpen} setSignupOpen={setSignupOpen} />
+    // </div>
+
     <div className={`landing-root ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
-      <div className="landing-card">
-        <div className="landing-brand">KARYA</div>
-        <div className="landing-sub">Beautiful tasks, built for focus</div>
+      <Card style={{ maxWidth: 400, width: '90%', padding: 24, textAlign: 'center' }}>
+        <Title>KARYA</Title>
+        <SubTitle>Beautiful tasks, built for focus</SubTitle>
         <div className="landing-form">
           <Login setSignupOpen={setSignupOpen} />
         </div>
-      <div className="landing-footer">By continuing you agree to our <a href="/terms">Terms</a></div>
-      </div>
+        <FooterText>By continuing you agree to our <a href="/terms">Terms</a></FooterText>
       <SignUp show={signupOpen} setSignupOpen={setSignupOpen} />
+      </Card>
     </div>
+   
   );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import NavBar from '../ui/NavBar';
 import Button from '../ui/Button';
-import logo from '../../images/logo.png';
 import BrandLogo from '../BrandLogo';
 
 
@@ -21,11 +20,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme }) => {
             { key: 'about', label: 'About', href: '#about' },
         ]}
             right={      
-                // <div className="app-actions">
+                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Button color="secondary" variant="outlined" type="button" className="theme-toggle" aria-label="Toggle theme" onClick={toggleTheme} style={{borderRadius: 24, borderWidth:2, textTransform:'none', fontWeight:600}}>
                     {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                   </Button>
-                // </div>
+                    <Button color="primary" variant="contained" type="button" className="theme-toggle" aria-label="Toggle theme" style={{borderWidth:2, textTransform:'none', fontWeight:600}}>
+                        Sign Out
+                  </Button>
+             </div>
             }
             />
     );
