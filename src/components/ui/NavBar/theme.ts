@@ -25,7 +25,7 @@ const theme: NavBarTheme = {
   },
   menu: {
     gap: "8px",
-    mobileBackground: "red",
+    mobileBackground: "var(--secondary-main)",
   },
   hamburger: {
     color: "var(--primary-main)",
