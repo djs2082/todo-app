@@ -3,5 +3,5 @@
 
 
 .app-main {
-  height: 100%;
+  height: calc(100dvh - 60px);
 }

@@ -10,6 +10,13 @@ export const lightTheme: Partial<InputTheme> = {
       border: "var(--primary-main)",
       focus: "var(--primary-main-hover)",
       helper: "var(--primary-main)",
+      // borderRadius: "var(--input-border-radius)",
+      // fontFamily: "var(--input-font-family)",
+      // labelColor: "var(--primary-main)",
+      // placeholderColor: "var(--primary-main)",
+      // background: "var(--secondary-main)",
+      // borderWidth: "var(--input-border-width)",
+      // labelBackground: "var(--secondary-main)",
     },
     secondary: {
       main: "var(--input-secondary-main)",
@@ -17,15 +24,14 @@ export const lightTheme: Partial<InputTheme> = {
       text: "var(--input-secondary-text)",
       border: "var(--input-secondary-border)",
       focus: "var(--input-secondary-focus)",
-      helper: "var(--input-secondary-helper)",
     },
     error: {
-      main: "var(--input-error-main)",
-      hover: "var(--input-error-hover)",
-      text: "var(--input-error-text)",
-      border: "var(--input-error-border)",
-      focus: "var(--input-error-focus)",
-      helper: "var(--input-error-helper)",
+      main: "var(--primary-main-error)",
+      hover: "var(--primary-main-error)",
+      text: "var(--primary-main-error)",
+      border: "var(--primary-main-error)",
+      focus: "var(--primary-main-error)",
+      helper: "var(--primary-main-error)",
     },
     success: {
       main: "var(--input-success-main)",
@@ -57,13 +63,15 @@ export const lightTheme: Partial<InputTheme> = {
     medium: { padding: "10px 14px", fontSize: "0.95rem", height: "44px", labelFontSize: "0.9rem" },
     large: { padding: "14px 18px", fontSize: "1.05rem", height: "52px", labelFontSize: "1rem" },
   },
-  borderRadius: "var(--input-border-radius)",
-  fontFamily: "var(--input-font-family)",
-  labelColor: "var(--primary-main)",
-  placeholderColor: "var(--primary-main)",
-  background: "var(--secondary-main)",
-  borderWidth: "var(--input-border-width)",
-  labelBackground: "var(--secondary-main)",
+  
+      borderRadius: "var(--input-border-radius)",
+      fontFamily: "var(--input-font-family)",
+      labelColor: "var(--primary-main)",
+      placeholderColor: "var(--primary-main)",
+      background: "var(--secondary-main)",
+      borderWidth: "var(--input-border-width)",
+      labelBackground: "var(--secondary-main)",
+    
 };
 
 // Dark theme object kept for explicit switching if needed.

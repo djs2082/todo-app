@@ -24,7 +24,7 @@ const Login: React.FC<LoginProps> = ({ setSignupOpen }) => {
         <div className="landing-form">
             <Robot hide={isPasswordFocused} />
             {form}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: "24px" }}>
                 <Button variant="contained" onClick={submit} disabled={false}>
                     Log in
                 </Button>

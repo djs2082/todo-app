@@ -12,6 +12,7 @@ import Login from '../../components/Login';
 import SignUp from '../../components/SignUp';
 import Typography from  '../../components/ui/Typography';
 import Card from '../../components/ui/Card';
+import { useResponsive } from '@karya_app1/rain-js';
 
 
 function validateEmail(v: string) {
@@ -23,6 +24,7 @@ function validateMobile(v: string) {
 }
 
 export default function Landing() {
+  const { isMobile } = useResponsive();
   const toast = useToast();
   const navigate = useNavigate();
   const { theme } = useTheme();
@@ -112,7 +114,7 @@ export default function Landing() {
     // </div>
 
     <div className={`landing-root ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
-      <Card style={{ maxWidth: 400, width: '90%', padding: 24, textAlign: 'center' }}>
+       <Card style={{ maxWidth: isMobile ? 600 : 400, width: '100%', padding: isMobile ? 4 : 24, textAlign: 'center', height: 'auto' }}> 
         <Title>KARYA</Title>
         <SubTitle>Beautiful tasks, built for focus</SubTitle>
         <div className="landing-form">
@@ -120,7 +122,7 @@ export default function Landing() {
         </div>
         <FooterText>By continuing you agree to our <a href="/terms">Terms</a></FooterText>
       <SignUp show={signupOpen} setSignupOpen={setSignupOpen} />
-      </Card>
+      </Card> 
     </div>
    
   );

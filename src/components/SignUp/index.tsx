@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '../ui/Button';
 import Robot from '../ui/Robot/Robot';
 import useSignupForm  from './useSignUpForm';
 import Modal from '../ui/Modal';
 import { Sign } from 'crypto';
+import { mobileRule, useFormFieldValidator, ValidationResult } from '@karya_app1/rain-js';
+import { clear } from 'console';
 
 interface SignUpProps {
     show: boolean;
@@ -11,17 +13,27 @@ interface SignUpProps {
 }
 
 const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
-    const { form, submit, isPasswordFocused } = useSignupForm({
+
+    const { form, submit, isPasswordFocused, values, validatorInstance, clearAllErrors, clearFieldError } = useSignupForm({
         onSubmit: async (vals) => {
-            // Add actual signup logic here
-            // eslint-disable-next-line no-console
-            console.log('Signing up with', vals);
+            clearAllErrors();
         },
-        onChange: (vals) => {
-            // eslint-disable-next-line no-console
-            console.log('Form values changed:', vals);
+        onChange: (values: any, delta: any) => {
+           clearFieldError(delta.name);
         },
     });
+
+    const { addRule } = validatorInstance;
+    useEffect(() => {
+        addRule('validate_match:password', (value: unknown, options?: Record<string, unknown>) => {
+            const isPasswordSame = value === values.password;
+            return { key: 'validate_match:password', success: isPasswordSame, fail: !isPasswordSame, message: "Passwords do not match" } as ValidationResult;
+        });
+        addRule('validate_mobile', (value: unknown, options?: Record<string, unknown>) => {
+            return value ? mobileRule(value, options) : { key: 'validate_mobile', success: true, fail: false } as ValidationResult;
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [addRule]);
 
     return (
         <Modal
@@ -29,6 +41,7 @@ const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
             header={<div>Sign up to KARYA</div>}
             onClose={()=>setSignupOpen(false)}
             width={400}
+            height={600}
         >
             <Robot hide={isPasswordFocused} />
             {form}

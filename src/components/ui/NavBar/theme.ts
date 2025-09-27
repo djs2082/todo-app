@@ -4,10 +4,10 @@ const theme: NavBarTheme = {
   container: {
     height: "60px",
     background: "var(--header-bg)",
+    shadow: "0 20px 50px var(--primary-main-shadow)",
     color: "var(--primary-main)",
     paddingX: "16px",
     borderBottom: "1px solid var(--secondary-main)",
-    shadow: "",
     zIndex: 200,
   },
   brand: {
@@ -24,8 +24,12 @@ const theme: NavBarTheme = {
     borderRadius: "6px",
   },
   menu: {
-    gap: "8px",
+    gap: "16px",
     mobileBackground: "var(--secondary-main)",
+    mobileMenuBorder: "2px solid var(--secondary-main-shadow)",
+    mobileMenuMargin: "0 2px",
+    mobileMenuMinWidth: 96,
+    mobileMenuMaxWidth: "200vw",
   },
   hamburger: {
     color: "var(--primary-main)",
