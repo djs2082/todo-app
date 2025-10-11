@@ -5,7 +5,10 @@ import useSignupForm  from './useSignUpForm';
 import Modal from '../ui/Modal';
 import { Sign } from 'crypto';
 import { mobileRule, useFormFieldValidator, ValidationResult } from '@karya_app1/rain-js';
-import { clear } from 'console';
+import { signup } from './api';
+import { set } from 'react-hook-form';
+// import { clear } from 'console';
+// import api from './../../lib/api'
 
 interface SignUpProps {
     show: boolean;
@@ -16,7 +19,21 @@ const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
 
     const { form, submit, isPasswordFocused, values, validatorInstance, clearAllErrors, clearFieldError } = useSignupForm({
         onSubmit: async (vals) => {
-            clearAllErrors();
+            try{
+                await signup({
+                    first_name: vals.firstName,
+                    last_name: vals.lastName,
+                    email: vals.email,
+                    mobile: vals.mobile,
+                    password: vals.password,
+                    confirm_password: vals.confirmPassword,
+                    account_name: 'public'
+                });
+                setSignupOpen(false);
+            }
+            catch(err){
+                
+            }
         },
         onChange: (values: any, delta: any) => {
            clearFieldError(delta.name);
@@ -50,18 +67,6 @@ const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
               <Button color="secondary" variant="contained" onClick={()=>setSignupOpen(false)}>Cancel</Button>
             </div>
         </Modal>
-        // <div className="landing-form">
-        //     <Robot hide={isPasswordFocused} />
-        //     {form}
-        //     <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
-        //         <Button variant="contained" onClick={submit} disabled={false}>
-        //             Log in
-        //         </Button>
-        //         <Button variant="contained" color="secondary" onClick={submit} disabled={false}>
-        //             Sign Up
-        //         </Button>
-        //     </div>
-        // </div>
     );
 };
 export default SignUp;

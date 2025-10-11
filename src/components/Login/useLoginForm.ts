@@ -2,6 +2,7 @@ import React from 'react';
 import { useDynamicForm } from '@karya_app1/rain-js';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
+import { login } from './api';
 
 export type LoginDetails = {
 	email: string;
@@ -31,7 +32,7 @@ export function useLoginForm(options: UseLoginFormOptions = {}) {
 					name: 'password',
 					label: 'Password',
 					type: 'password',
-					validate: ['validate_required', 'validate_password'],
+					validate: ['validate_required'],
 					inputProps: {
 						fullWidth: true,
 						floatingLabel: true,

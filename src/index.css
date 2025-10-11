@@ -23,7 +23,7 @@ code {
   --primary-main-hover: #1a202c;
   --secondary-main: #f3f4f6;
   --primary-main-shadow: rgba(255,255,255,0.5);
-  --primary-main-error: #d32f2f;
+  --primary-main-error: #de4343;
   --main-fancy: var(--secondary-main-shadow);
   --secondary-main-shadow: rgba(0,0,0,0.5);
   --header-bg: linear-gradient(90deg, #d9d5c7, #e4dfd2 60%, #dad5c8);
@@ -85,7 +85,7 @@ code {
   --secondary-main: #162430;
   --secondary-main-hover: #1a202c;
   --primary-main-shadow: rgba(0,0,0,0.5);
-   --primary-main-error: #d32f2f;
+   --primary-main-error: #880808;
    --main-fancy: rgb(253, 225, 103);
   --secondary-main-shadow: rgba(255,255,255,0.5);
   --header-bg: #162430;

@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Typography, { TypographyThemeProvider } from '@karya_app1/rain-js';
+import { TypographyThemeProvider } from '@karya_app1/rain-js';
 import Home from './containers/Home';
+import Activate from './containers/Activate';
 import Landing from './containers/Landing';
-import { ToastProvider } from './components/ui';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 // import ResponsiveProvider from './context/ResponsiveContext';
 // import ResponsiveProvider from './context/ResponsiveContext';
@@ -11,6 +11,7 @@ import { ResponsiveProvider } from '@karya_app1/rain-js';
 import PageLayout from './components/ui/PageLayout';
 import AppHeader from './components/AppHeader';
 import TypographyTheme from './components/ui/Typography/theme'
+import ToastContainer from './components/ToastContainer';
 
 function App() {
   return (
@@ -19,9 +20,8 @@ function App() {
         <ThemeProvider>
             <ResponsiveProvider breakpoints={{ mobile: 480, tablet: 1024 }}>
               <TypographyThemeProvider theme={TypographyTheme}>
-                <ToastProvider>
-                  <Shell />
-                </ToastProvider>
+                <ToastContainer />
+                <Shell />
               </TypographyThemeProvider>
             </ResponsiveProvider>
         </ThemeProvider>
@@ -42,8 +42,11 @@ function Shell() {
       <main className="app-main">
          <Routes>
             <Route path="/" element={<Landing />} />
-           <Route path="/home" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/tasks" element={<Home />} />
+            {/* Activation routes */}
+            <Route path="/activate" element={<Activate />} />
+            <Route path="/activate/:token" element={<Activate />} />
           </Routes>
       </main>
     </PageLayout>

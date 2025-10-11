@@ -2,6 +2,8 @@ import React from 'react';
 import Button from '../ui/Button';
 import Robot from '../ui/Robot/Robot';
 import { useLoginForm } from './useLoginForm';
+import { client } from './../../http'
+import { login } from './api';
 
 interface LoginProps {
     setSignupOpen: (val:boolean) => void;
@@ -10,13 +12,13 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ setSignupOpen }) => {
     const { form, submit, isPasswordFocused } = useLoginForm({
         onSubmit: async (vals) => {
-            // Add actual login logic here
-            // eslint-disable-next-line no-console
-            console.log('Logging in with', vals);
+            try {
+                await login({email: vals.email, password: vals.password});
+            } catch (error) {
+               
+            }
         },
         onChange: (vals) => {
-            // eslint-disable-next-line no-console
-            console.log('Form values changed:', vals);
         },
     });
 

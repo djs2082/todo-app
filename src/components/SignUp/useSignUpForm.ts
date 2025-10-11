@@ -29,7 +29,7 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     name: 'firstName',
                     label: 'First Name',
                     type: 'text',
-                    defaultValue: 'Dilip',
+                    defaultValue: '',
                     inputProps: { fullWidth: true, floatingLabel: true },
                     validators: ['validate_required'],
                     required: true,
@@ -38,8 +38,8 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     name: 'lastName',
                     label: 'Last Name',
                     type: 'text',
-                    defaultValue: 'Joshi',
-                     inputProps: { fullWidth: true, floatingLabel: true },
+                    defaultValue: '',
+                    inputProps: { fullWidth: true, floatingLabel: true },
                     validators: ['validate_required'],
                     required: true,
                 },
@@ -47,7 +47,7 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     name: 'email',
                     label: 'Email',
                     type: 'email',
-                    defaultValue: 'dilip.joshi@example.com',
+                    defaultValue: '',
                     inputProps: { fullWidth: true, floatingLabel: true },
                     validators: ['validate_required', 'validate_email'],
                     required: true,
@@ -55,7 +55,7 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                 {
                     name: 'mobile',
                     label: 'Mobile Number',
-                    defaultValue: '+1234567890',
+                    defaultValue: '',
                     type: 'text',
                     inputProps: { fullWidth: true, floatingLabel: true },
                     validators: ['validate_mobile'],
@@ -64,7 +64,7 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     name: 'password',
                     label: 'Password',
                     type: 'password',
-                    defaultValue: 'Password123',
+                    defaultValue: '',
                     inputProps: { fullWidth: true, floatingLabel: true, 						
                         onFocus: () => setIsPasswordFocused(true),
 						onBlur: () => setIsPasswordFocused(false), },
@@ -75,7 +75,7 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     name: 'confirmPassword',
                     label: 'Confirm Password',
                     type: 'password',
-                    defaultValue: 'Password123',
+                    defaultValue: '',
                     inputProps: { fullWidth: true, floatingLabel: true,
                         onFocus: () => setIsPasswordFocused(true),
 						onBlur: () => setIsPasswordFocused(false),
@@ -90,16 +90,11 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
                     if (onSubmit) {
                         await onSubmit(values);
                     } else {
-                        // default noop
-                        // eslint-disable-next-line no-console
-                        console.log('Signing up with', values);
                     }
                 },
             },
             onChange: (values: SignupDetails, delta?: { name: keyof SignupDetails & string; value: any }) => {
                 if (onChange) onChange(values, delta);
-                // eslint-disable-next-line no-console
-                else console.log('Form values changed:', values, delta);
             },
         },
         {
