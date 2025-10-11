@@ -50,7 +50,7 @@ const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
             return value ? mobileRule(value, options) : { key: 'validate_mobile', success: true, fail: false } as ValidationResult;
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [addRule]);
+    }, [values.confirmPassword, values.mobile, values.password]);
 
     return (
         <Modal
