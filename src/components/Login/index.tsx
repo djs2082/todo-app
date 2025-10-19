@@ -5,6 +5,7 @@ import { useLoginForm } from './useLoginForm';
 import { login } from './api';
 import Typography from '../ui/Typography';
 import ForgotPassword from '../ForgotPassword';
+import useUserStore from '../../userStore';
 
 interface LoginProps {
     setSignupOpen: (val:boolean) => void;
@@ -14,12 +15,19 @@ const Login: React.FC<LoginProps> = ({ setSignupOpen }) => {
 
     const [forgotPasswordOpen, setForgotPasswordOpen] = React.useState(false);
 
+    const userStore  = useUserStore();
+    const { signIn, setUser } = userStore;
+
+
+
     const { HelperText } = Typography;
 
     const { form, submit, isPasswordFocused } = useLoginForm({
         onSubmit: async (vals) => {
             try {
-                await login({email: vals.email, password: vals.password});
+                const res = await login({email: vals.email, password: vals.password});
+                signIn(res.data.user)
+                sessionStorage.setItem('access_token', res.data.access_token);
             } catch (error) {
                
             }

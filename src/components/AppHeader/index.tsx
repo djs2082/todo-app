@@ -4,6 +4,9 @@ import NavBar from '../ui/NavBar';
 import Button from '../ui/Button';
 import BrandLogo from '../BrandLogo';
 import Icon from '../ui/Icon';
+import { signOut as userSignout} from './api';
+import useUserStore from '../../userStore';
+import { useNavigate } from 'react-router-dom';
 
 
 interface AppHeaderProps {
@@ -11,6 +14,7 @@ interface AppHeaderProps {
     toggleTheme: () => void;
 }
 const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme }) => {
+    const { signOut } = useUserStore();
     const { isMobile } = useResponsive();
 
 
@@ -32,15 +36,28 @@ const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme }) => {
             );
     };
 
+    const logout = async () => {
+        try {
+            await userSignout(
+                { access_token: sessionStorage.getItem('access_token') || '' }
+            );
+            signOut();
+            sessionStorage.removeItem('access_token');
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error during sign out:', error);
+        }
+    }
+
     const logoutIcon = () => {
         if (isMobile) {
             return (
-                <Button color="primary" variant="text" type="button" className="theme-toggle" aria-label="Toggle theme" style={{borderWidth:2, textTransform:'none', fontWeight:600}}>
+                <Button color="primary" variant="text" type="button" className="theme-toggle" aria-label="Toggle theme" style={{borderWidth:2, textTransform:'none', fontWeight:600}} onClick={logout}>
                     <Icon name="logout" />
                 </Button>
             );
         }
-        return  <Button color="primary" variant="contained" type="button" className="theme-toggle" aria-label="Toggle theme" style={{borderWidth:2, textTransform:'none', fontWeight:600}}>
+        return  <Button color="primary" variant="contained" type="button" className="theme-toggle" aria-label="Toggle theme" style={{borderWidth:2, textTransform:'none', fontWeight:600}} onClick={logout}>
                        Sign Out
                   </Button>
     }

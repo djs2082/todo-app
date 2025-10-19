@@ -58,7 +58,7 @@ export const client = createHttpClient({
      
 
       if(flags.show_loader) increment();
-      const token = authTokenGetter();
+      const token = sessionStorage.getItem('access_token')
       if (token) {
         config.headers = { ...(config.headers || {}), Authorization: `Bearer ${token}` };
       }
