@@ -12,6 +12,9 @@ import PageLayout from './components/ui/PageLayout';
 import AppHeader from './components/AppHeader';
 import TypographyTheme from './components/ui/Typography/theme'
 import ToastContainer from './components/ToastContainer';
+import Loader from './components/ui/Loader';
+import { Upcoming } from '@mui/icons-material';
+import UpdatePassword from './components/UpdatePassword';
 
 function App() {
   return (
@@ -22,6 +25,7 @@ function App() {
               <TypographyThemeProvider theme={TypographyTheme}>
                 <ToastContainer />
                 <Shell />
+                
               </TypographyThemeProvider>
             </ResponsiveProvider>
         </ThemeProvider>
@@ -34,6 +38,7 @@ function Shell() {
 
   return (
     <div>
+    <Loader />
     <PageLayout
       contentPadding="0"
       stickyHeader={true}
@@ -47,6 +52,7 @@ function Shell() {
             {/* Activation routes */}
             <Route path="/activate" element={<Activate />} />
             <Route path="/activate/:token" element={<Activate />} />
+            <Route path="/reset-password/:token" element={<UpdatePassword />} />
           </Routes>
       </main>
     </PageLayout>

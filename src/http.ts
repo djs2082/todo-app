@@ -1,8 +1,10 @@
 import { createHttpClient } from "@karya_app1/rain-js";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import useToastStore from "./components/ToastContainer/store";
+import useLoaderStore from "./components/ui/Loader/store";
 
 const { addToast } = useToastStore.getState();
+const { increment, decrement } = useLoaderStore.getState();
 type ExtraRequestFlags = {
   show_error?: boolean;    // default true
   show_success?: boolean;  // default true
@@ -53,9 +55,9 @@ export const client = createHttpClient({
       
       const flags = addFlags(config);
       (config as any).__flags = flags;
-      deleteRequestFlags(config);
+     
 
-      // TODO: if you maintain a global loader, increment here when show_loader is true
+      if(flags.show_loader) increment();
       const token = authTokenGetter();
       if (token) {
         config.headers = { ...(config.headers || {}), Authorization: `Bearer ${token}` };
@@ -68,7 +70,6 @@ export const client = createHttpClient({
         if (showError) {
           addToast({ message: flags?.error_message || 'Request failed', variant: 'error' });
         }
-        // TODO: decrement loader if you track one
         return Promise.reject(err);
     }
   },
@@ -78,17 +79,18 @@ export const client = createHttpClient({
       if (flags?.show_success) {
         addToast({ message: flags?.success_message || res?.data?.message || 'Success', variant: 'success' });
       }
-      // TODO: decrement loader if you track one
+      if(flags?.show_loader) decrement();
       return res;
     },
     onRejected: (err: any) => {
       const flags = (err?.config && (err.config as any).__flags) as ExtraRequestFlags | undefined;
+
       const showError = flags?.show_error !== false; // default true
       if (showError) {
         const msg = flags?.error_message || err?.response?.data?.message || err?.message || 'Request failed';
         addToast({ message: msg, variant: 'error' });
       }
-      // TODO: decrement loader if you track one
+      if(flags?.show_loader) decrement();
       return Promise.reject(err);
     }
   },
