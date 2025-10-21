@@ -51,11 +51,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme, setTheme}) =>
             await userSignout(
                 { access_token: sessionStorage.getItem('access_token') || '' }
             );
+        } catch (error) {
+            console.error('Error during sign out:', error);
+        }
+        finally {
             signOut();
             sessionStorage.removeItem('access_token');
             window.location.href = '/';
-        } catch (error) {
-            console.error('Error during sign out:', error);
         }
     }
 
