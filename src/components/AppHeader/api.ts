@@ -5,9 +5,14 @@ export type SignOutPayload = {
 };
 
 export type SignOutResponse = {
-    message?: string;
+    id?: number;
+    key: string;
+    value: string;
 }
 
+export type ToggleThemeResponse = {
+    theme?: 'light' | 'dark';
+}
 export async function signOut(payload: SignOutPayload): Promise<SignOutResponse> {
     try {
     const res = await client.post('/logout', { data: payload, show_error: false, show_success: false });
@@ -17,4 +22,16 @@ export async function signOut(payload: SignOutPayload): Promise<SignOutResponse>
     }
 }
 
-export default { signOut };
+export async function changeTheme(setting_id: number | undefined, value: 'light' | 'dark'): Promise<void> {
+    try {
+        await client.put('/settings/' + setting_id, 
+            { 
+                data: { value },
+                show_success: false
+            });
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export default { signOut, changeTheme };

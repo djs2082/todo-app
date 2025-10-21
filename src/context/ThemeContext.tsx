@@ -1,11 +1,12 @@
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import useUserStore from '../userStore';
 
 type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  setTheme: (theme: Theme) => void;
 }
 
 // Create context with a default value
@@ -13,10 +14,23 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Provider component
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'dark');
+  const { user, updateUserTheme } = useUserStore();
+  const userTheme = user?.settings?.find(s => s.key === 'theme')?.value as Theme || 'light';
   
+  const [theme, setTheme] = useState<Theme>(() => userTheme);
+  // const [theme, setTheme] = useLocalStorage<Theme>('theme', userTheme);
+ 
+  useEffect(() => {
+   updateTheme(userTheme);
+  }, [userTheme]);
+
+  const updateTheme  = (newTheme: Theme) => {
+    setTheme(newTheme);
+    updateUserTheme(newTheme);
+  };
+
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    updateTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   // Apply data-theme attribute for CSS variable switching
@@ -29,7 +43,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // Value to be provided to consumers
   const value = {
     theme,
-    toggleTheme
+    toggleTheme, 
+    setTheme: updateTheme
   };
 
   return (

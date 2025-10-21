@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useResponsive } from '@karya_app1/rain-js';
 import NavBar from '../ui/NavBar';
 import Button from '../ui/Button';
 import BrandLogo from '../BrandLogo';
 import Icon from '../ui/Icon';
-import { signOut as userSignout} from './api';
+import { signOut as userSignout, changeTheme as changeUserTheme} from './api';
 import useUserStore from '../../userStore';
-import { useNavigate } from 'react-router-dom';
 
 
 interface AppHeaderProps {
     theme: 'light' | 'dark';
     toggleTheme: () => void;
+    setTheme: (theme: 'light' | 'dark') => void;
 }
-const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme }) => {
-    const { signOut } = useUserStore();
+const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme, setTheme}) => {
+    const { signOut, user } = useUserStore();
     const { isMobile } = useResponsive();
-
+    const themeSetting = user?.settings?.find(s => s.key === 'theme');
 
     const getThemeIcon = () => {
         return theme === 'dark' ? <Icon name="sun" color="var(--main-fancy)" /> : <Icon name="moon" color="var(--main-fancy)" />;
@@ -27,10 +27,20 @@ const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme }) => {
         return theme === 'dark' ? 'Light' : 'Dark';
     }
 
+    const changeTheme = async () => {
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        try {
+            await changeUserTheme(themeSetting?.id, newTheme);
+            setTheme(newTheme);
+        } catch (error) {
+            console.error('Error changing theme:', error);
+        }
+    }
+
     const themeIcon = () => {
         const icon = getThemeIcon();
             return (
-                <Button color="secondary" variant={isMobile ? "text" : "contained"} type="button" className="theme-toggle" aria-label="Toggle theme" onClick={toggleTheme} startIcon={icon} style={{ borderRadius: 24, borderWidth: 2, textTransform: 'none', fontWeight: 600 }}>
+                <Button color="secondary" variant={isMobile ? "text" : "contained"} type="button" className="theme-toggle" aria-label="Toggle theme" onClick={changeTheme} startIcon={icon} style={{ borderRadius: 24, borderWidth: 2, textTransform: 'none', fontWeight: 600 }}>
                     {getThemeText()}
                 </Button>
             );

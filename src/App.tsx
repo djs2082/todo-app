@@ -15,6 +15,9 @@ import ToastContainer from './components/ToastContainer';
 import Loader from './components/ui/Loader';
 import { Upcoming } from '@mui/icons-material';
 import UpdatePassword from './components/UpdatePassword';
+import { fetchUser } from './api';
+import { useEffect } from 'react';
+import store from './userStore';
 
 function App() {
   return (
@@ -33,8 +36,29 @@ function App() {
   );
 }
 
+
+
 function Shell() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, setTheme } = useTheme();
+  
+  useEffect(() => {
+  const { user } = store.getState();
+  if (!user) return;
+
+    const loadUser = async () => {
+      const userId = user.id; 
+      try {
+        const userData = await fetchUser(userId);
+        console.log('Fetched user data:', userData);
+        // You can update your user store or state here with the fetched data
+        store.setState({ user: userData });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    loadUser();
+  }, []);
 
   return (
     <div>
@@ -42,7 +66,7 @@ function Shell() {
     <PageLayout
       contentPadding="0"
       stickyHeader={true}
-      header={<AppHeader theme={theme} toggleTheme={toggleTheme} />}
+      header={<AppHeader theme={theme} toggleTheme={toggleTheme} setTheme={setTheme} />}
       >
       <main className="app-main">
          <Routes>
