@@ -1,17 +1,3 @@
-.priority-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: white;
-  flex-shrink: 0;
-}
-.card--low .priority-badge { background: #059669; }
-.card--medium .priority-badge { background: #d97706; }
-.card--high .priority-badge { background: #dc2626; }
-
 /* prevent horizontal scroll when content fits */
 html, body, #root {
   overflow-x: hidden;
@@ -308,7 +294,7 @@ img, svg {
 }
 
 /* Priority badge more compact */
-/* .priority-badge {
+.priority-badge {
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
@@ -317,7 +303,7 @@ img, svg {
   font-weight: 600;
   color: white;
   flex-shrink: 0;
-} */
+}
 
 /* Small rounded badge to indicate priority */
 .card--low .priority-badge { background: #059669; }

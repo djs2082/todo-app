@@ -1,6 +1,6 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { TodoTask, Status } from '../model';
-import Card from './Card';
+import TaskCard from './TaskCard';
 import { capturePositions, consumePrevRects } from '../flipStore';
 
 type ColumnProps = {
@@ -232,7 +232,7 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
                       transform: dragOverIndex !== null && idx >= dragOverIndex ? 'translateY(68px)' : undefined,
                     }}
                   >
-                    <Card
+                    <TaskCard
                       task={task}
                       onChangeStatus={onChangeStatus}
                       onEdit={onEdit}
