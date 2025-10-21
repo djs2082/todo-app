@@ -81,9 +81,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({ theme, toggleTheme, setTheme}) =>
         ]}
             right={
                 <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                {user ? <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                    {themeIcon()}
-                </div>
+                </div> : <></>}
                 <div>
                     {logoutIcon()}
                   </div>
