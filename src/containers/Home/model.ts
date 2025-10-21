@@ -11,6 +11,17 @@ export enum Status {
   Cancelled = 'cancelled',
 }
 
+export enum Actions {
+  Start = 'start',
+  Edit = 'edit',
+  Delete = 'delete',
+  ReOpen = 'reopen',
+  Done = 'done',
+  Pause = 'pause',
+  Resume = 'resume',
+
+}
+
 export type ISODate = string; // YYYY-MM-DD
 export type LocalTime = string; // HH:MM (24h)
 

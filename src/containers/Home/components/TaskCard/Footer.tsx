@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Typography from '../../../../components/ui/Typography';
 import { Status } from '../../model';
 import Button from './../../../../components/ui/Button';
+import FooterButton from './FooterButton';
 
 type FooterProps = {
   dueDate: string | undefined;
@@ -82,28 +83,55 @@ const Footer = ({ dueDate, dueTime, status }: FooterProps) => {
         // Placeholder function to avoid errors
     }
 
-    const footerButtons = (): React.ReactNode => {
-        switch (status) {
-            case Status.Pending:
-                return (
-                    <div style={{display: 'flex', gap: '8px'}}>
-                        <Button variant="contained" size="small" color="info" onClick={(e) => { e.stopPropagation(); onChangeStatus('1', Status.InProgress); }}>
-                            Start
-                        </Button>
-                        <Button variant="contained" size="small" color="secondary" onClick={(e) => { e.stopPropagation(); onEdit("task"); }}>Edit</Button>
-                        <Button variant="contained" size="small" color="error" onClick={(e) => { e.stopPropagation(); onDelete("task.id"); }}>Delete</Button>
-                    </div>
-                );
-            case Status.InProgress:
-                return (
-                    <HelperText>Click to pause working on this task.</HelperText>
-                );
-            case Status.Cancelled:
-                return (
-                    <HelperText>Task was cancelled.</HelperText>
-                );
-        }
+    const setPauseOpen = (val: boolean) => {
+        // Placeholder function to avoid errors
     }
+
+    // const footerButtons = (): React.ReactNode => {
+    //     switch (status) {
+    //         case Status.Pending:
+    //             return (
+    //                 <div style={{display: 'flex', gap: '8px'}}>
+    //                     <Button variant="contained" size="small" color="info" onClick={(e) => { e.stopPropagation(); onChangeStatus('1', Status.InProgress); }}>
+    //                         Start
+    //                     </Button>
+    //                     <Button variant="contained" size="small" color="secondary" onClick={(e) => { e.stopPropagation(); onEdit("task"); }}>Edit</Button>
+    //                     <Button variant="contained" size="small" color="error" onClick={(e) => { e.stopPropagation(); onDelete("task.id"); }}>Delete</Button>
+    //                 </div>
+    //             );
+    //         case Status.InProgress:
+    //             return (
+    //                 <div style={{display: 'flex', gap: '8px'}}>
+    //                    <Button variant="contained" size="small" color="success" onClick={(e) => { e.stopPropagation(); onChangeStatus("id", Status.Done); }}>Done</Button>
+    //                    <Button variant="contained" size="small" color="warning" type="button" onClick={(e) => { e.stopPropagation(); setPauseOpen(true); }}>Pause</Button>
+    //                    <Button variant="contained" size="small" color="secondary" onClick={(e) => { e.stopPropagation(); onEdit("task"); }}>Edit</Button>
+    //                    <Button variant="contained" size="small" color="error" onClick={(e) => { e.stopPropagation(); onDelete("task"); }}>Delete</Button>
+    //                 </div>
+    //             );
+    //         case Status.Cancelled:
+    //             return (
+    //                <>
+    //                <div style={{display: 'flex', gap: '8px'}}>
+    //                                <Button variant="contained" color="success" size="small" onClick={(e) => { e.stopPropagation(); onChangeStatus("", Status.InProgress); }}>Resume</Button>
+    //                                <Button variant="contained" color="secondary" size="small" onClick={(e) => { e.stopPropagation(); onEdit("task"); }}>Edit</Button>
+    //                                <Button variant="contained" color="error" size="small" onClick={(e) => { e.stopPropagation(); onDelete("task.id"); }}>Delete</Button>
+
+    //                 </div>
+    //                 </>
+    //             );
+
+    //         case Status.Done:
+    //             return (
+    //                 <div style={{display: 'flex', gap: '8px'}}>
+    //                                     <Button variant="contained" color="warning" size="small" onClick={(e) => { e.stopPropagation(); onChangeStatus("td", Status.Pending); }}>Re-open</Button>
+    //                                     <Button variant="contained" color="secondary" size="small" onClick={(e) => { e.stopPropagation(); onEdit("task"); }}>Edit</Button>
+    //                                     <Button variant="contained" color="error" size="small" onClick={(e) => { e.stopPropagation(); onDelete("task.id"); }}>Delete</Button>
+    //                 </div>
+    //             );
+    //         default:
+    //             return null;
+    //     }
+    // }
 
   return (
     <>
@@ -121,7 +149,7 @@ const Footer = ({ dueDate, dueTime, status }: FooterProps) => {
             </div>
         </div>
         <div style={{marginTop: '24px'}}>
-            { footerButtons() }
+            <FooterButton status={status} />
         </div>
     </>
   );
