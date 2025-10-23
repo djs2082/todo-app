@@ -13,6 +13,8 @@ type ColumnProps = {
 };
 
 export default function Column({ title, status, tasks, onChangeStatus, onEdit, onDelete }: ColumnProps) {
+
+  const Card = (process.env.REACT_APP_OLD_CODE_FLAG === 'true') ? require('./Card').default : TaskCard;
   const [collapsed, setCollapsed] = useState(false);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const items = status ? tasks.filter((t) => t.status === status) : tasks;
@@ -232,7 +234,7 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
                       transform: dragOverIndex !== null && idx >= dragOverIndex ? 'translateY(68px)' : undefined,
                     }}
                   >
-                    <TaskCard
+                    <Card
                       task={task}
                       onChangeStatus={onChangeStatus}
                       onEdit={onEdit}

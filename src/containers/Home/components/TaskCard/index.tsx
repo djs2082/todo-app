@@ -1,25 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { TodoTask, Status, Priority } from '../../model';
-import Button from './../Button';
-import Modal from './../Modal';
 import Card from '../../../../components/ui/Card';
-import PriorityBadge from '../../../../components/ui/PriorityBadge';
 import Typography from '../../../../components/ui/Typography';
 import Header from './Header';
 import Footer from './Footer';
-
-// helper types for pauses
-// type PauseEntry = {
-//   reason: string;
-//   progress: number;
-//   comment?: string;
-//   at: string; // ISO string
-// };
-
-  const truncate = (s?: string, n = 50) => {
-    if (!s) return '';
-    return s.length > n ? s.slice(0, n - 1) + '…' : s;
-  };
+import { truncateString } from '../../../../utils';
 
 type TaskCardProps = {
   task: TodoTask;
@@ -34,7 +18,7 @@ const CardAccentPriorityMap: Record<Priority, 'info' | 'warning' | 'danger'> = {
   high: 'danger',
 };
 
-export default function TaskCard({ task, onChangeStatus, onEdit, onDelete }: TaskCardProps) {
+export default function TaskCard({ task }: TaskCardProps) {
   
   const { BodyText } = Typography;
   return (
@@ -52,7 +36,7 @@ export default function TaskCard({ task, onChangeStatus, onEdit, onDelete }: Tas
         footer={<Footer dueDate={task.dueDate} dueTime={task.dueTime} status={task.status} />}
     >
        {task.description ? (
-        <BodyText style={{padding: "2px", marginBottom: 0}}>{truncate(task.description, 500)}</BodyText>
+        <BodyText style={{padding: "2px", marginBottom: 0}}>{truncateString(task.description, 500)}</BodyText>
           ) : null}
     </Card>
   )
