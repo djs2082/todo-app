@@ -28,11 +28,11 @@ const authTokenGetter = (): string | null => {
 
 const addFlags = (config: AxiosRequestConfig & ExtraRequestFlags): ExtraRequestFlags  => {
   const flags: ExtraRequestFlags = {
-    show_error: config.data.show_error ?? true,
-    show_success: config.data.show_success ?? true,
-    show_loader: config.data.show_loader ?? true,
-    success_message: config.data.success_message,
-    error_message: config.data.error_message,
+    show_error: config?.data?.show_error ?? true,
+    show_success: config?.data?.show_success ?? true,
+    show_loader: config?.data?.show_loader ?? true,
+    success_message: config?.data?.success_message,
+    error_message: config?.data?.error_message,
   };
   return flags;
 }

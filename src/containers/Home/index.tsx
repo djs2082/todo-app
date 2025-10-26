@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './styles.css';
 import HomeViewModel from './viewModel';
-import { TodoTask, Status } from './model';
+import { Status } from './model';
 import Column from './components/Column';
 import Modal from './components/Modal';
 import { Button } from  '@karya_app1/rain-js';
+import AddEditTask from './components/AddEditTask';
+import { fetchTasks } from './api';
+import useTaskStore from './store';
 // Time format conversion utilities
 const to12Hour = (time24: string): { hours: string, minutes: string, period: 'AM' | 'PM' } => {
   if (!time24 || time24 === '') return { hours: '12', minutes: '00', period: 'AM' };
@@ -34,26 +37,30 @@ const to24Hour = (hours: string, minutes: string, period: 'AM' | 'PM'): string =
 
 
 export default function Home(): React.ReactElement {
+
+  const taskStore = useTaskStore();
+  const { tasks, addTasks, setShowAddTaskModal } = taskStore;
 // eslint-disable-next-line
 const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
+const [addTaskOpen, setAddTaskOpen] = useState<boolean>(false);
   const vmRef = useRef<HomeViewModel | null>(null);
-  const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
+  // const [snapshot, setSnapshot] = useState<TodoTask[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Removed isTimeModalOpen and TimeClock modal
   const [form, setForm] = useState<any>({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
   // Derived time state for 12-hour format display
   const [timeState, setTimeState] = useState<{ hours: string, minutes: string, period: 'AM' | 'PM' }>({ hours: '12', minutes: '00', period: 'AM' });
 
-  useEffect(() => {
-    if (!vmRef.current) vmRef.current = new HomeViewModel();
-    const vm = vmRef.current;
-    const unsubscribe = vm.subscribe(() => {
-      setSnapshot(vm.getTasksForDate(date));
-    });
-    // initial snapshot
-    setSnapshot(vm.getTasksForDate(date));
-    return unsubscribe;
-  }, [date]);
+  // useEffect(() => {
+  //   if (!vmRef.current) vmRef.current = new HomeViewModel();
+  //   const vm = vmRef.current;
+  //   const unsubscribe = vm.subscribe(() => {
+  //     setSnapshot(vm.getTasksForDate(date));
+  //   });
+  //   // initial snapshot
+  //   setSnapshot(vm.getTasksForDate(date));
+  //   return unsubscribe;
+  // }, [date]);
 
   function openNewTaskModal() {
     setForm({ id: undefined, title: '', description: '', priority: 'medium', dueDate: date, dueTime: '', status: 'pending' });
@@ -62,68 +69,78 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
   // setIsTimeModalOpen(false); // removed
   }
 
-  function openEditTaskModal(task: TodoTask) {
-    const dueTime = task.dueTime ?? '';
-    setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: dueTime, status: task.status });
-    // Update time picker UI state when editing a task
-    setTimeState(to12Hour(dueTime));
-    setIsModalOpen(true);
-  // setIsTimeModalOpen(false); // removed
-  }
+  // function openEditTaskModal(task: TodoTask) {
+  //   const dueTime = task.dueTime ?? '';
+  //   setForm({ id: task.id, title: task.title, description: task.description ?? '', priority: task.priority, dueDate: task.dueDate ?? date, dueTime: dueTime, status: task.status });
+  //   // Update time picker UI state when editing a task
+  //   setTimeState(to12Hour(dueTime));
+  //   setIsModalOpen(true);
+  // // setIsTimeModalOpen(false); // removed
+  // }
 
-  function submitForm(e?: React.FormEvent) {
-    e?.preventDefault();
-    const vm = vmRef.current!;
-    if (form.id) {
-      vm.updateTask(form.id, {
-        title: form.title,
-        description: form.description,
-        priority: form.priority,
-        dueDate: form.dueDate,
-        dueTime: form.dueTime,
-        status: form.status,
-      });
-    } else {
-      // addTask is async now (will attempt remote create when authenticated)
-      vm.addTask(date, {
-        title: form.title,
-        description: form.description,
-        priority: form.priority,
-        dueDate: form.dueDate,
-        dueTime: form.dueTime,
-        status: form.status,
-      }).catch(() => {
-        // swallow errors, viewmodel handles fallback to local
-      });
+  useEffect(() => {
+    async function fetchUserTasks() {
+      const response = await fetchTasks({});
+      if (response.data) {
+        addTasks(response.data);
+      }
     }
-    // refresh snapshot immediately so UI updates without waiting for subscription
-    setSnapshot(vm.getTasksForDate(date));
-    setIsModalOpen(false);
-  }
+    fetchUserTasks();
+  }, []);
 
-  function deleteTodo(id: string) {
-    const vm = vmRef.current!;
-    vm.removeTask(id);
-    setSnapshot(vm.getTasksForDate(date));
-  }
+  // function submitForm(e?: React.FormEvent) {
+  //   e?.preventDefault();
+  //   const vm = vmRef.current!;
+  //   if (form.id) {
+  //     vm.updateTask(form.id, {
+  //       title: form.title,
+  //       description: form.description,
+  //       priority: form.priority,
+  //       dueDate: form.dueDate,
+  //       dueTime: form.dueTime,
+  //       status: form.status,
+  //     });
+  //   } else {
+  //     // addTask is async now (will attempt remote create when authenticated)
+  //     vm.addTask(date, {
+  //       title: form.title,
+  //       description: form.description,
+  //       priority: form.priority,
+  //       dueDate: form.dueDate,
+  //       dueTime: form.dueTime,
+  //       status: form.status,
+  //     }).catch(() => {
+  //       // swallow errors, viewmodel handles fallback to local
+  //     });
+  //   }
+  //   // refresh snapshot immediately so UI updates without waiting for subscription
+  //   setSnapshot(vm.getTasksForDate(date));
+  //   setIsModalOpen(false);
+  // }
 
-  function changeStatus(id: string, status: Status, insertIndex?: number) {
-    const vm = vmRef.current!;
-    vm.updateTask(id, { status }, insertIndex);
-    setSnapshot(vm.getTasksForDate(date));
-  }
+  // function deleteTodo(id: string) {
+  //   const vm = vmRef.current!;
+  //   vm.removeTask(id);
+  //   setSnapshot(vm.getTasksForDate(date));
+  // }
+
+  // function changeStatus(id: string, status: Status, insertIndex?: number) {
+  //   const vm = vmRef.current!;
+  //   vm.updateTask(id, { status }, insertIndex);
+  //   setSnapshot(vm.getTasksForDate(date));
+  // }
 
   return (
     <div className="home-container">
       <div className="home-header">
         <h1 className="home-title">Remember your duty.</h1>
-        <button type="button" onClick={openNewTaskModal} className="add-button">
+        <button type="button" onClick={() => setShowAddTaskModal(true)} className="add-button">
           <span className="add-button-text">New Task</span>
           <span className="add-button-icon">+</span>
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} title={form.id ? 'Edit Task' : 'Create Task'} onClose={() => setIsModalOpen(false)}>
+      {/* <Modal isOpen={isModalOpen} title={form.id ? 'Edit Task' : 'Create Task'} onClose={() => setIsModalOpen(false)}>
         <form onSubmit={submitForm} style={{ display: 'grid', gap: 12 }}>
           <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title" style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} required />
           <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={4} style={{ padding: 8, borderRadius: 6, border: '1px solid #e5e7eb' }} />
@@ -197,17 +214,17 @@ const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
             <button type="submit" style={{ padding: '8px 12px', borderRadius: 6, background: '#2563eb', color: '#fff' }}>{form.id ? 'Save' : 'Create'}</button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
 
   {/* TimeClock and modal removed: now only a simple time input is used */}
 
       <div className="main-columns">
-        <Column title="ToDo" status={Status.Pending} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
-        <Column title="Paused" status={Status.Cancelled} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
-        <Column title="In Progress" status={Status.InProgress} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
-        <Column title="Done" status={Status.Done} tasks={snapshot} onChangeStatus={changeStatus} onEdit={openEditTaskModal} onDelete={deleteTodo} />
+        <Column title="ToDo" status={Status.Pending} tasks={tasks.pending}  />
+        <Column title="Paused" status={Status.Paused} tasks={tasks.paused}  />
+        <Column title="In Progress" status={Status.InProgress} tasks={tasks.in_progress}  />
+        <Column title="Completed" status={Status.Completed} tasks={tasks.completed}  />
       </div>
-
+      <AddEditTask action="add" />
       <div className="todo-footer">
 
       </div>

@@ -11,6 +11,7 @@ export type LoginResponse = {
 	[key: string]: any;
 };
 
+
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
     try {
     const res = await client.post('/login', { user: payload });

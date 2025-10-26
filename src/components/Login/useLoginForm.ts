@@ -49,7 +49,7 @@ export function useLoginForm(options: UseLoginFormOptions = {}) {
 					} else {
 						// default noop
 						// eslint-disable-next-line no-console
-						console.log('Logging in with', vals);
+					
 					}
 				},
 			},

@@ -1,23 +1,21 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { TodoTask, Status } from '../model';
+import { Status, Task } from '../model';
 import TaskCard from './TaskCard';
 import { capturePositions, consumePrevRects } from '../flipStore';
+import useTaskStore from '../store';
 
 type ColumnProps = {
   title: string;
   status: Status | null; // null means show all
-  tasks: TodoTask[];
-  onChangeStatus: (id: string, status: Status, insertIndex?: number) => void;
-  onEdit: (task: TodoTask) => void;
-  onDelete: (id: string) => void;
+  tasks: Task[];
 };
 
-export default function Column({ title, status, tasks, onChangeStatus, onEdit, onDelete }: ColumnProps) {
+export default function Column({ title, status, tasks }: ColumnProps) {
 
   const Card = (process.env.REACT_APP_OLD_CODE_FLAG === 'true') ? require('./Card').default : TaskCard;
   const [collapsed, setCollapsed] = useState(false);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-  const items = status ? tasks.filter((t) => t.status === status) : tasks;
+  const items = status ? tasks.filter((t) => t.priority === 'low') : tasks;
   // refs for FLIP animation
   const wrappersRef = useRef<Map<string, HTMLElement>>(new Map());
   const prevRectsRef = useRef<Map<string, DOMRect>>(new Map());
@@ -153,26 +151,26 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
               }
 
               // if dropping into the same column, we should reorder without changing status
-              try {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const srcColumn = window.__draggingSrcColumn as string | undefined;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const srcIndex = typeof window.__draggingSrcIndex === 'number' ? window.__draggingSrcIndex : undefined;
-                if (srcColumn === title && typeof srcIndex === 'number') {
-                  // reorder within same column
-                  capturePositions();
-                  onChangeStatus(id, status, insertIndex);
-                } else {
-                  // moving between columns: update status and insert at index
-                  capturePositions();
-                  onChangeStatus(id, status, insertIndex);
-                }
-              } catch (ex) {
-                // fallback
-                onChangeStatus(id, status, insertIndex);
-              }
+              // try {
+              //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //   // @ts-ignore
+              //   const srcColumn = window.__draggingSrcColumn as string | undefined;
+              //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //   // @ts-ignore
+              //   const srcIndex = typeof window.__draggingSrcIndex === 'number' ? window.__draggingSrcIndex : undefined;
+              //   if (srcColumn === title && typeof srcIndex === 'number') {
+              //     // reorder within same column
+              //     capturePositions();
+              //     onChangeStatus(id, status, insertIndex);
+              //   } else {
+              //     // moving between columns: update status and insert at index
+              //     capturePositions();
+              //     onChangeStatus(id, status, insertIndex);
+              //   }
+              // } catch (ex) {
+              //   // fallback
+              //   onChangeStatus(id, status, insertIndex);
+              // }
 
               // clear placeholder
               setDragOverIndex(null);
@@ -207,12 +205,12 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
               <span className="collapsed-head-title">Task</span>
               <span className="collapsed-head-date">Due time</span>
             </li>
-            {items.map((t) => (
+            {/* {items.map((t) => (
               <li key={t.id} className="collapsed-item">
                 <span className="collapsed-title" title={t.title}>{t.title}</span>
                 <span className="collapsed-date">{isDueToday(t.dueDate) ? (t.dueTime || 'Not Set') : ''}</span>
               </li>
-            ))}
+            ))} */}
           </ul>
         )}
 
@@ -226,19 +224,19 @@ export default function Column({ title, status, tasks, onChangeStatus, onEdit, o
                   <div
                     className="card-wrapper"
                     data-task-id={task.id}
-                    ref={(el) => {
-                      if (el) wrappersRef.current.set(task.id, el);
-                      else wrappersRef.current.delete(task.id);
-                    }}
+                    // ref={(el) => {
+                    //   if (el) wrappersRef.current.set(task.id, el);
+                    //   else wrappersRef.current.delete(task.id);
+                    // }}
                     style={{
                       transform: dragOverIndex !== null && idx >= dragOverIndex ? 'translateY(68px)' : undefined,
                     }}
                   >
                     <Card
                       task={task}
-                      onChangeStatus={onChangeStatus}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
+                      // onChangeStatus={onChangeStatus}
+                      // onEdit={onEdit}
+                      // onDelete={onDelete}
                       // expose drag metadata by writing to window in drag handlers inside Card
                     />
                    </div>

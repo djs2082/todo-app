@@ -49,7 +49,6 @@ function Shell() {
       const userId = user.id; 
       try {
         const userData = await fetchUser(userId);
-        console.log('Fetched user data:', userData);
         // You can update your user store or state here with the fetched data
         store.setState({ user: userData });
       } catch (error) {

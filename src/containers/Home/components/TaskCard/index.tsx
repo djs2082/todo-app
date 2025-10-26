@@ -1,4 +1,4 @@
-import { TodoTask, Status, Priority } from '../../model';
+import { TaskData, Status, Priority } from '../../model';
 import Card from '../../../../components/ui/Card';
 import Typography from '../../../../components/ui/Typography';
 import Header from './Header';
@@ -6,9 +6,9 @@ import Footer from './Footer';
 import { truncateString } from '../../../../utils';
 
 type TaskCardProps = {
-  task: TodoTask;
+  task: TaskData;
   onChangeStatus: (id: string, status: Status) => void;
-  onEdit: (task: TodoTask) => void;
+  onEdit: (task: TaskData) => void;
   onDelete: (id: string) => void;
 };
 
@@ -33,7 +33,7 @@ export default function TaskCard({ task }: TaskCardProps) {
         showHeaderDivider
         accentVariant={CardAccentPriorityMap[task.priority as Priority]}
         header={<Header title={task.title} priority={task.priority as Priority} />}
-        footer={<Footer dueDate={task.dueDate} dueTime={task.dueTime} status={task.status} />}
+        footer={<Footer task={task} dueDateTime={task.due_date_time} status={task.status} pauses={[]} />}
     >
        {task.description ? (
         <BodyText style={{padding: "2px", marginBottom: 0}}>{truncateString(task.description, 500)}</BodyText>

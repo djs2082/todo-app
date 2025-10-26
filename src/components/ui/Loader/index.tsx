@@ -4,7 +4,6 @@ import useLoaderStore from "./store";
 
 const Loader: React.FC<RainLoaderProps> = (props) => {
     const { count } = useLoaderStore();
-    console.log("Loader count:", count);
     if (count <= 0) return null;
     return (
       <RainLoader 

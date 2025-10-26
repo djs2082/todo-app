@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TodoTask, Status, Priority } from '../model';
+import { TaskData, Status, Priority } from '../model';
 import Button from './Button';
 import Modal from './Modal';
 
@@ -12,13 +12,10 @@ type PauseEntry = {
 };
 
 type CardProps = {
-  task: TodoTask;
-  onChangeStatus: (id: string, status: Status) => void;
-  onEdit: (task: TodoTask) => void;
-  onDelete: (id: string) => void;
+  task: TaskData;
 };
 
-export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardProps) {
+export default function Card({ task }: CardProps) {
   const priorityClass =
     task.priority === Priority.Low
       ? 'card--low'
@@ -29,8 +26,8 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
   // status class overrides accent for certain statuses
   let statusClass = '';
   if (task.status === Status.Pending) statusClass = 'card--status-todo';
-  else if (task.status === Status.Cancelled) statusClass = 'card--status-paused';
-  else if (task.status === Status.Done) statusClass = 'card--status-done';
+  else if (task.status === Status.Paused) statusClass = 'card--status-paused';
+  else if (task.status === Status.Completed) statusClass = 'card--status-done';
 
   const truncate = (s?: string, n = 50) => {
     if (!s) return '';
@@ -38,13 +35,13 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
   };
 
   // live seconds until due (positive) or overdue (negative)
-  const [secondsLeft, setSecondsLeft] = useState<number | null>(() => computeSecondsLeft(task.dueDate, task.dueTime));
+  // const [secondsLeft, setSecondsLeft] = useState<number | null>(() => computeSecondsLeft(task.dueDate, task.dueTime));
 
-  useEffect(() => {
-    setSecondsLeft(computeSecondsLeft(task.dueDate, task.dueTime));
-    const t = setInterval(() => setSecondsLeft(computeSecondsLeft(task.dueDate, task.dueTime)), 1000);
-    return () => clearInterval(t);
-  }, [task.dueDate, task.dueTime]);
+  // useEffect(() => {
+  //   setSecondsLeft(computeSecondsLeft(task.due_date_time, task.dueTime));
+  //   const t = setInterval(() => setSecondsLeft(computeSecondsLeft(task.dueDate, task.dueTime)), 1000);
+  //   return () => clearInterval(t);
+  // }, [task.dueDate, task.dueTime]);
 
   function computeSecondsLeft(dueDate?: string, dueTime?: string): number | null {
     if (!dueDate || !dueTime) return null;
@@ -229,7 +226,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
       // ignore storage errors
     }
     setPauseOpen(false);
-    onChangeStatus(task.id, Status.Cancelled);
+    // onChangeStatus(task.id, Status.Paused);
   };
 
   const formatDateTime = (iso: string) => {
@@ -242,7 +239,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
   };
 
   const prettyPriority = (p: Priority) => ({ low: 'Low', medium: 'Medium', high: 'High' }[p]);
-  const prettyStatus = (s: Status) => ({ pending: 'Pending', in_progress: 'In Progress', done: 'Done', cancelled: 'Paused' }[s]);
+  const prettyStatus = (s: Status) => ({ pending: 'Pending', in_progress: 'In Progress', completed: 'Completed', paused: 'Paused' }[s]);
 
   return (
     <>
@@ -251,7 +248,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
         draggable={true}
         onClick={() => setDetailsOpen(true)}
         onDragStart={(e) => {
-          e.dataTransfer.setData('text/plain', task.id);
+          // e.dataTransfer.setData('text/plain', task.id);
           e.dataTransfer.effectAllowed = 'move';
           try {
             // global fallback for browsers/events where dataTransfer isn't available during dragover
@@ -271,7 +268,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
                 window.__draggingSrcColumn = col ? (col.querySelector('.column-header div')?.textContent || '') : '';
                 // compute index among siblings
                 const siblings = Array.from(wrapper.parentElement?.querySelectorAll('.card-wrapper') || []) as HTMLElement[];
-                const idx = siblings.findIndex((s) => s.dataset.taskId === task.id);
+                // const idx = siblings.findIndex((s) => s.dataset.taskId === task.id);
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 window.__draggingSrcIndex = idx;
@@ -320,7 +317,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
           ) : null}
 
           {/* Third row: due date and time */}
-          <div className="card-datetime">
+          {/* <div className="card-datetime">
             <div className="datetime-group">
               <span className="datetime-label">Due date:</span>
               <span className="datetime-value">{task.dueDate ?? 'Not set'}</span>
@@ -329,7 +326,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
               <span className="datetime-label">Due time:</span>
               <span className="datetime-value">{task.dueTime ?? 'Not set'}</span>
             </div>
-          </div>
+          </div> */}
 
           {/* Paused count above actions */}
           {pauses.length > 0 && (
@@ -349,22 +346,22 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
           {/* Fourth row: actions */}
           <div className="card-actions">
             {/* left: due-in timer for Pending (only) */}
-            {task.status === Status.Pending && (
+            {/* {task.status === Status.Pending && (
               <div className={`due-in ${secondsLeft !== null && secondsLeft < 0 ? 'overdue' : ''}`}>
                 {secondsLeft === null ? 'Due: not set' : formatDurationFromSeconds(secondsLeft)}
               </div>
-            )}
+            )} */}
 
             {/* working time (live while InProgress, shown as Worked when paused) */}
-            {(task.status === Status.InProgress || task.status === Status.Cancelled) && (
-              <div className={`working-time ${task.status === Status.Cancelled ? 'worked' : ''}`}>
+            {(task.status === Status.InProgress || task.status === Status.Paused) && (
+              <div className={`working-time ${task.status === Status.Paused ? 'worked' : ''}`}>
                 {task.status === Status.InProgress ? `Working time ${formatUpFromSeconds(trackedSeconds)}` : `Worked: ${formatUpFromSeconds(trackedSeconds)}`}
               </div>
             )}
 
             <div className="actions-right">
              {/* Buttons depend on status */}
-            {task.status === Status.Pending && (
+            {/* {task.status === Status.Pending && (
               <>
                 <Button variant="primary" size="sm" onClick={(e) => { e.stopPropagation(); onChangeStatus(task.id, Status.InProgress); }} aria-label={`Start ${task.title}`}>
                   Start
@@ -374,7 +371,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
                </>
              )}
 
-            {task.status === Status.Cancelled && (
+            {task.status === Status.Paused && (
               <>
                 <Button variant="success" size="sm" onClick={(e) => { e.stopPropagation(); onChangeStatus(task.id, Status.InProgress); }}>Resume</Button>
                 <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(task); }}>Edit</Button>
@@ -384,20 +381,20 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
 
             {task.status === Status.InProgress && (
               <>
-                <Button variant="success" size="sm" onClick={(e) => { e.stopPropagation(); onChangeStatus(task.id, Status.Done); }}>Done</Button>
+                <Button variant="success" size="sm" onClick={(e) => { e.stopPropagation(); onChangeStatus(task.id, Status.Completed); }}>Done</Button>
                 <Button variant="muted" size="sm" type="button" onClick={(e) => { e.stopPropagation(); setPauseOpen(true); }}>Pause</Button>
                 <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(task); }}>Edit</Button>
                 <Button variant="danger" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}>Delete</Button>
               </>
             )}
 
-            {task.status === Status.Done && (
+            {task.status === Status.Completed && (
               <>
                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onChangeStatus(task.id, Status.Pending); }}>Re-open</Button>
                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(task); }}>Edit</Button>
                  <Button variant="danger" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}>Delete</Button>
                </>
-             )}
+             )} */}
             </div>
            </div>
          </div>
@@ -457,25 +454,7 @@ export default function Card({ task, onChangeStatus, onEdit, onDelete }: CardPro
        </Modal>
 
        {/* Details Modal */}
-       <Modal isOpen={detailsOpen} title="Task details" onClose={() => setDetailsOpen(false)}>
-         <div style={{ display: 'grid', gap: 12 }}>
-           <div><strong>Title:</strong> {task.title}</div>
-           {task.description ? <div><strong>Description:</strong> {task.description}</div> : null}
-           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-             <div><strong>Priority:</strong> {prettyPriority(task.priority)}</div>
-             <div><strong>Status:</strong> {prettyStatus(task.status)}</div>
-             <div><strong>Due date:</strong> {task.dueDate || 'Not set'}</div>
-             <div><strong>Due time:</strong> {task.dueTime || 'Not set'}</div>
-             <div><strong>Worked:</strong> {formatUpFromSeconds(trackedSeconds)}</div>
-           </div>
-           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 8 }}>
-             <Button variant="muted" size="sm" onClick={() => { /* keep details open */ setPausesOpen(true); }}>
-               View all pauses ({pauses.length})
-             </Button>
-           </div>
-         </div>
-       </Modal>
-
+  
        {/* Pauses list Modal */}
        <Modal isOpen={pausesOpen} title="Pauses" onClose={() => setPausesOpen(false)}>
          {pauses.length === 0 ? (
