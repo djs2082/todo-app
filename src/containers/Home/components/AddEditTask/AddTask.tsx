@@ -2,12 +2,14 @@ import Modal from './../../../../components/ui/Modal';
 import useAddTaskForm from './useAddTaskForm';
 import Button from './../../../../components/ui/Button';
 import { addTask } from './api';
+import { fetchTasks } from '../../api';
+import useTaskStore from '../../store';
 type TaskAddProps = {
   addTaskOpen: boolean;
   setAddTaskOpen: (open: boolean) => void;
 };
 const AddTask = ({ addTaskOpen, setAddTaskOpen }: TaskAddProps) => {
-
+      const { addTasks } = useTaskStore();
       const { form, submit } = useAddTaskForm({
           onSubmit: async (vals) => {
               try {
@@ -19,8 +21,13 @@ const AddTask = ({ addTaskOpen, setAddTaskOpen }: TaskAddProps) => {
                       due_date_time: utcString,
                       priority: vals.priority
                   });
+                  setAddTaskOpen(false);
+                  const response = await fetchTasks({});
+                  if (response.data) {
+                      addTasks(response.data);
+                  }
               } catch (error) {
-                 
+                  console.log('Error adding task:', error);
               }
           },
           onChange: (vals) => {
