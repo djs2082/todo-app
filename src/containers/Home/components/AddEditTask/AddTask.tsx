@@ -12,23 +12,41 @@ const AddTask = ({ addTaskOpen, setAddTaskOpen }: TaskAddProps) => {
       const { addTasks } = useTaskStore();
       const { form, submit } = useAddTaskForm({
           onSubmit: async (vals) => {
-              try {
-                    const localDate = new Date(`${vals.date}T${vals.time}:00`);
-                    const utcString = localDate.toISOString();
-                    const res = await addTask({
-                      title: vals.title,
-                      description: vals.description,
-                      due_date_time: utcString,
-                      priority: vals.priority
-                  });
-                  setAddTaskOpen(false);
-                  const response = await fetchTasks({});
-                  if (response.data) {
-                      addTasks(response.data);
-                  }
-              } catch (error) {
-                  console.log('Error adding task:', error);
+            console.log('Submitting add task form with vals:', vals);
+            try {
+              // vals.date and vals.time may be Date objects or strings. Compose local datetime and convert to UTC.
+              const dateInput: any = (vals as any).date;
+              const timeInput: any = (vals as any).time;
+              const dateObj = dateInput instanceof Date ? dateInput : new Date(dateInput);
+              const timeObj = timeInput instanceof Date ? timeInput : new Date(timeInput);
+              if (isNaN(dateObj.getTime()) || isNaN(timeObj.getTime())) {
+                throw new Error('Invalid date or time');
               }
+              const composedLocal = new Date(
+                dateObj.getFullYear(),
+                dateObj.getMonth(),
+                dateObj.getDate(),
+                timeObj.getHours(),
+                timeObj.getMinutes(),
+                0,
+                0
+              );
+              const utcString = composedLocal.toISOString();
+
+              const res = await addTask({
+                title: vals.title,
+                description: vals.description,
+                due_date_time: utcString,
+                priority: vals.priority,
+              });
+              setAddTaskOpen(false);
+              const response = await fetchTasks({});
+              if (response.data) {
+                addTasks(response.data);
+              }
+            } catch (error) {
+              console.log('Error adding task:', error);
+            }
           },
           onChange: (vals) => {
           },
