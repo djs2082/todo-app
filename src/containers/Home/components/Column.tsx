@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { Status, Task } from '../model';
+import { Status, Task, TaskData } from '../model';
 import TaskCard from './TaskCard';
 import { capturePositions, consumePrevRects } from '../flipStore';
 import useTaskStore from '../store';
@@ -7,12 +7,11 @@ import useTaskStore from '../store';
 type ColumnProps = {
   title: string;
   status: Status | null; // null means show all
-  tasks: Task[];
+  tasks: TaskData[];
 };
 
 export default function Column({ title, status, tasks }: ColumnProps) {
 
-  const Card = (process.env.REACT_APP_OLD_CODE_FLAG === 'true') ? require('./Card').default : TaskCard;
   const [collapsed, setCollapsed] = useState(false);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const items = status ? tasks.filter((t) => t.priority === 'low') : tasks;
@@ -104,13 +103,13 @@ export default function Column({ title, status, tasks }: ColumnProps) {
               if (insertIndex === -1) insertIndex = visible.length;
 
               // if this column is the origin and computed slot equals origin index, don't show placeholder
-              if (draggedId) {
-                const originIndex = items.findIndex((t) => t.id === draggedId);
-                if (originIndex !== -1 && originIndex === insertIndex) {
-                  // user hasn't moved far enough; hide placeholder
-                  insertIndex = -1;
-                }
-              }
+              // if (draggedId) {
+              //   const originIndex = items.findIndex((t) => t.id === draggedId);
+              //   if (originIndex !== -1 && originIndex === insertIndex) {
+              //     // user hasn't moved far enough; hide placeholder
+              //     insertIndex = -1;
+              //   }
+              // }
 
               // only update if changed to reduce re-renders
               if (insertIndex !== dragOverIndex) setDragOverIndex(insertIndex);
@@ -232,7 +231,7 @@ export default function Column({ title, status, tasks }: ColumnProps) {
                       transform: dragOverIndex !== null && idx >= dragOverIndex ? 'translateY(68px)' : undefined,
                     }}
                   >
-                    <Card
+                    <TaskCard
                       task={task}
                       // onChangeStatus={onChangeStatus}
                       // onEdit={onEdit}

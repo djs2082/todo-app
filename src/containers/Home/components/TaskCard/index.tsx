@@ -7,9 +7,9 @@ import { truncateString } from '../../../../utils';
 
 type TaskCardProps = {
   task: TaskData;
-  onChangeStatus: (id: string, status: Status) => void;
-  onEdit: (task: TaskData) => void;
-  onDelete: (id: string) => void;
+  // onChangeStatus: (id: string, status: Status) => void;
+  // onEdit: (task: TaskData) => void;
+  // onDelete: (id: string) => void;
 };
 
 const CardAccentPriorityMap: Record<Priority, 'info' | 'warning' | 'danger'> = {
