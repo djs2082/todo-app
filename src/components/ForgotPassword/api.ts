@@ -1,12 +1,5 @@
 import { client } from '../../http';
-
-export type ForgotPasswordPayload = {
-    email: string;
-};
-
-export type ForgotPasswordResponse = {
-    message?: string;
-};
+import { ForgotPasswordPayload, ForgotPasswordResponse } from '../../types';
 
 export async function forgotPassword(payload: ForgotPasswordPayload): Promise<ForgotPasswordResponse> {
     try {

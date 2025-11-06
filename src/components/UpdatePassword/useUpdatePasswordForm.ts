@@ -2,23 +2,14 @@ import React from 'react';
 import { useDynamicForm, useFormFieldValidator } from '@karya_app1/rain-js';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
+import { UpdatePasswordFormData, FormHookOptions } from '../../types';
 
-export type UpdatePasswordDetails = {
-    password: string;
-    confirmPassword: string;
-};
-
-export type UseUpdatePasswordFormOptions = {
-    onSubmit?: (vals: UpdatePasswordDetails) => Promise<void> | void;
-    onChange?: (vals: Partial<UpdatePasswordDetails>, delta?: { name: keyof UpdatePasswordDetails & string; value: any }) => void;
-};
-
-export function useUpdatePasswordForm(options: UseUpdatePasswordFormOptions = {}) {
+export function useUpdatePasswordForm(options: FormHookOptions<UpdatePasswordFormData> = {}) {
     const { onSubmit, onChange } = options;
     const [isPasswordFocused, setIsPasswordFocused] = React.useState(false);
     const validatorInstance = useFormFieldValidator();
 
-    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<UpdatePasswordDetails>(
+    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<UpdatePasswordFormData>(
         {
             fields: [
                 {
@@ -47,14 +38,14 @@ export function useUpdatePasswordForm(options: UseUpdatePasswordFormOptions = {}
             ],
             submit: {
                 label: 'Update Password',
-                onSubmit: async (values: UpdatePasswordDetails) => {
+                onSubmit: async (values: UpdatePasswordFormData) => {
                     if (onSubmit) {
                         await onSubmit(values);
                     } else {
                     }
                 },
             },
-            onChange: (values: UpdatePasswordDetails, delta?: { name: keyof UpdatePasswordDetails & string; value: any }) => {
+            onChange: (values: UpdatePasswordFormData, delta?: { name: keyof UpdatePasswordFormData & string; value: any }) => {
                 if (onChange) onChange(values, delta);
             },
         },

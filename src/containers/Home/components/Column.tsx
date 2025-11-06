@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { Status, Task, TaskData } from '../model';
+import { Status, Task } from '../model';
 import TaskCard from './TaskCard';
 import { capturePositions, consumePrevRects } from '../flipStore';
 import useTaskStore from '../store';
@@ -7,7 +7,7 @@ import useTaskStore from '../store';
 type ColumnProps = {
   title: string;
   status: Status | null; // null means show all
-  tasks: TaskData[];
+  tasks: Task[];
 };
 
 export default function Column({ title, status, tasks }: ColumnProps) {

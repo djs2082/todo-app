@@ -1,19 +1,10 @@
 import { client } from '../../http';
+import { ActivateAccountPayload, AuthResponse } from '../../types';
 
-export type ActivateAccountPayload = {
-    activation_code: string;
-};
-
-export type ActivateAccountResponse = {
-    token?: string;
-    user?: any;
-    [key: string]: any;
-};
-
-export async function activateAccount(payload: ActivateAccountPayload): Promise<ActivateAccountResponse> {
+export async function activateAccount(payload: ActivateAccountPayload): Promise<AuthResponse> {
     try {
     const res = await client.put('/activate', { data: payload, show_error: false, show_success: false });
-    return (res as any).data as ActivateAccountResponse;
+    return (res as any).data as AuthResponse;
     } catch (error) {
         return Promise.reject(error);
     }

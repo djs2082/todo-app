@@ -1,5 +1,5 @@
 import React from 'react';
-import { Status, Actions, TaskData } from '../../model';
+import { Status, Actions, Task } from '../../model';
 import Button from './../../../../components/ui/Button';
 import { ActionButtonConfig } from './ActionButtonsConfig';
 import actionsButtonConfig from './ActionButtonsConfig';
@@ -9,7 +9,7 @@ import AddEditTask from '../AddEditTask';
 
 type FooterButtonProps = {
     status: Status;
-    task: TaskData;
+    task: Task;
 };
 
 

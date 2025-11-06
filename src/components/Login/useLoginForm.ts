@@ -3,22 +3,13 @@ import { useDynamicForm } from '@karya_app1/rain-js';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import { login } from './api';
+import { LoginFormData, FormHookOptions } from '../../types';
 
-export type LoginDetails = {
-	email: string;
-	password: string;
-};
-
-export type UseLoginFormOptions = {
-	onSubmit?: (vals: LoginDetails) => Promise<void> | void;
-	onChange?: (vals: Partial<LoginDetails>) => void;
-};
-
-export function useLoginForm(options: UseLoginFormOptions = {}) {
+export function useLoginForm(options: FormHookOptions<LoginFormData> = {}) {
 	const { onSubmit, onChange } = options;
 	const [isPasswordFocused, setIsPasswordFocused] = React.useState(false);
 
-	const { form, values, submit, errors } = useDynamicForm<LoginDetails>(
+	const { form, values, submit, errors } = useDynamicForm<LoginFormData>(
 		{
 			fields: [
 				{

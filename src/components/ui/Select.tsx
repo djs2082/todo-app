@@ -4,17 +4,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MuiSelect, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
+import type { SelectFieldProps, SelectOption } from '../../types';
 
-export type SelectFieldProps = Omit<SelectProps, 'onChange'> & {
-  label?: string;
-  value?: any;
-  onChange?: (value: any) => void;
-  options?: { value: string | number; label: string }[];
-  errorText?: string | null;
-  sx?: any;
-};
-
-export default function SelectField({ label, value, onChange, options = [], errorText, sx, ...rest }: SelectFieldProps) {
+export default function SelectField({ label, value, onChange, options = [], errorText, sx, ...rest }: SelectFieldProps & Omit<SelectProps, keyof SelectFieldProps>) {
   return (
     <FormControl fullWidth size="small" error={!!errorText} sx={sx}>
       {label && <InputLabel>{label}</InputLabel>}

@@ -1,56 +1,12 @@
-export enum Priority {
-  Low = 'low',
-  Medium = 'medium',
-  High = 'high',
-}
+/**
+ * @deprecated Import from '../../types' instead
+ * This file is kept for backward compatibility
+ */
 
-export enum Status {
-  Pending = 'pending',
-  InProgress = 'in_progress',
-  Completed = 'completed',
-  Paused = 'paused',
-}
-
-export enum Actions {
-  Start = 'start',
-  Edit = 'edit',
-  Delete = 'delete',
-  ReOpen = 'reopen',
-  Done = 'done',
-  Pause = 'pause',
-  Resume = 'resume',
-
-}
-
-export type ISODate = string; // YYYY-MM-DD
-export type LocalTime = string; // HH:MM (24h)
-
-export interface TaskData {
-  id: number;
-  usr_id: number
-  title: string;
-  description?: string;
-  priority: Priority;
-  created_at: string; // ISO datetime
-  updated_at?: string; // ISO datetime
-  due_date_time: string | null; // ISO datetime or null
-  status: Status;
-  total_working_time: number; // in seconds
-  started_at: string | null; // ISO datetime or null
-  last_resumed_at: string | null; // ISO datetime or null
-}
-
-export type Task = {
-    id: string | number;
-    title: string;
-    description: string;
-    due_date_time: string;
-    priority: 'low' | 'medium' | 'high';
-};
-
-function nowIso(): string {
-  return new Date().toISOString();
-}
+// Re-export from centralized types
+export { Priority, Status, TaskAction as Actions } from '../../types/task';
+export type { ISODate, LocalTime } from '../../types/common';
+export type { TaskData, Task } from '../../types/task';
 
 /**
  * TodoTask represents a single task with fields requested by the user.

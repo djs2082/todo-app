@@ -1,21 +1,10 @@
 import { client } from '../../http';
+import { LoginPayload, AuthResponse } from '../../types';
 
-export type LoginPayload = {
-	email: string;
-	password: string;
-};
-
-export type LoginResponse = {
-	token?: string;
-	user?: any;
-	[key: string]: any;
-};
-
-
-export async function login(payload: LoginPayload): Promise<LoginResponse> {
+export async function login(payload: LoginPayload): Promise<AuthResponse> {
     try {
     const res = await client.post('/login', { user: payload });
-    return (res as any).data as LoginResponse;
+    return (res as any).data as AuthResponse;
     } catch (error) {
         console.error('Login API error:', error);
         return Promise.reject(error);

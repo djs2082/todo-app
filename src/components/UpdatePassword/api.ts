@@ -1,15 +1,5 @@
 import { client } from '../../http';
-
-export type UpdatePasswordPayload = {
-    token: string;
-    password: string;
-    confirmPassword: string;
-};
-
-export type UpdatePasswordResponse = {
-    success: boolean;
-    message: string;
-};
+import { UpdatePasswordPayload, UpdatePasswordResponse } from '../../types';
 
 export async function updatePassword(payload: UpdatePasswordPayload): Promise<UpdatePasswordResponse> {
     try {

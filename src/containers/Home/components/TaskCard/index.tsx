@@ -1,4 +1,4 @@
-import { TaskData, Status, Priority } from '../../model';
+import { Task, Status, Priority } from '../../model';
 import Card from '../../../../components/ui/Card';
 import Typography from '../../../../components/ui/Typography';
 import Header from './Header';
@@ -6,7 +6,7 @@ import Footer from './Footer';
 import { truncateString } from '../../../../utils';
 
 type TaskCardProps = {
-  task: TaskData;
+  task: Task;
   // onChangeStatus: (id: string, status: Status) => void;
   // onEdit: (task: TaskData) => void;
   // onDelete: (id: string) => void;

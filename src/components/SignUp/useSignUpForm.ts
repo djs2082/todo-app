@@ -2,27 +2,14 @@ import React from 'react';
 import { useDynamicForm, useFormFieldValidator } from '@karya_app1/rain-js';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
+import { SignupFormData, FormHookOptions } from '../../types';
 
-export type SignupDetails = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    mobile: string;
-    password: string;
-    confirmPassword: string;
-};
-
-export type UseSignUpFormOptions = {
-    onSubmit?: (vals: SignupDetails) => Promise<void> | void;
-    onChange?: (vals: Partial<SignupDetails>, delta?: { name: keyof SignupDetails & string; value: any }) => void;
-};
-
-export function useSignUpForm(options: UseSignUpFormOptions = {}) {
+export function useSignUpForm(options: FormHookOptions<SignupFormData> = {}) {
     const { onSubmit, onChange } = options;
     const [isPasswordFocused, setIsPasswordFocused] = React.useState(false);
     const validatorInstance = useFormFieldValidator();
 
-    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<SignupDetails>(
+    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<SignupFormData>(
         {
             fields: [
                 {
@@ -86,14 +73,14 @@ export function useSignUpForm(options: UseSignUpFormOptions = {}) {
             ],
             submit: {
                 label: 'Sign Up',
-                onSubmit: async (values: SignupDetails) => {
+                onSubmit: async (values: SignupFormData) => {
                     if (onSubmit) {
                         await onSubmit(values);
                     } else {
                     }
                 },
             },
-            onChange: (values: SignupDetails, delta?: { name: keyof SignupDetails & string; value: any }) => {
+            onChange: (values: SignupFormData, delta?: { name: keyof SignupFormData & string; value: any }) => {
                 if (onChange) onChange(values, delta);
             },
         },

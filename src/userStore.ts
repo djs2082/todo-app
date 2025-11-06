@@ -1,32 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import type { User, UserSettings, UserState } from './types';
 
-export type UserSettings = {
-	id: number,
-	key: string,
-	value: string
-}
-
-export type User = {
-	id?: string | number;
-	email?: string;
-	firstName?: string;
-	lastName?: string;
-	accountName?: string;
-	settings?: UserSettings[];
-}
-
-export interface UserState {
-	isSignedIn: boolean;
-	user: User | null;
-	setSignedIn: (val: boolean) => void;
-	setUser: (user: User | null) => void;
-	signIn: (user?: User) => void;
-	signOut: () => void;
-	updateUser: (patch: Partial<User>) => void;
-	userTheme: () => 'light' | 'dark';
-	updateUserTheme: (theme: 'light' | 'dark') => void;
-}
+// Re-export types for backward compatibility
+export type { User, UserSettings, UserState };
 
 export const useUserStore = create<UserState>()(
 	persist(

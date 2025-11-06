@@ -1,37 +1,5 @@
 import { create } from 'zustand';
-import { Priority, Status } from './model';
-
-interface Task {
-  id: string | number;
-  title: string;
-  description: string;
-  priority: Priority;
-  due_date_time: string;
-  status: Status;
-}
-
-type TasksIndexedByStatus = {
-  [key in Status]: Task[];
-};
-
-interface TaskState {
-  tasks: TasksIndexedByStatus;
-  addTasks: (tasks: TasksIndexedByStatus) => void;
-  addTask: (task: Task) => void;
-  removeTask: (id?: string | number) => void;
-  getTask: (id: number, status: Status) => Task | undefined;
-  clearAllTasks: () => void;
-  showAddTaskModal: boolean;
-  setShowAddTaskModal: (show: boolean) => void;
-  showEditTaskModal: boolean;
-  setShowEditTaskModal: (show: boolean) => void;
-  taskToEdit: Task;
-  setTaskToEdit: (id: number, status: Status) => void;
-  showTaskPauseModal: boolean;
-  setShowTaskPauseModal: (show: boolean) => void;
-  taskToPause: Task;
-  setTaskToPause: (id: number, status: Status) => void;
-}
+import { Task, TasksByStatus, TaskState, Priority, Status } from '../../types';
 
 export const useTaskStore = create<TaskState>((set, get) => ({
   tasks: {

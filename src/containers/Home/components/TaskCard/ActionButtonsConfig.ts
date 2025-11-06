@@ -1,5 +1,5 @@
  import { To } from "react-router-dom";
-import { Actions, Status } from "../../model";
+ import { Status, TaskAction } from "../../../../types"
  import { startTask, addTask, TodoTask, deleteTask, completeTask, resumeTask } from "./api";
  import { fetchTasks } from "../../api";
  export type ActionButtonConfig = {
@@ -10,6 +10,15 @@ import { Actions, Status } from "../../model";
      onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => void;
  };
 
+ const Actions ={
+    "Start": "start",
+    "Edit": "edit",
+    "Delete": "delete",
+    "ReOpen": "reopen",
+    "Done": "done",
+    "Pause": "pause",
+    "Resume": "resume"
+ }
 
 const addNewTask = async (data: TodoTask) => {
     await addTask({
@@ -76,50 +85,50 @@ const pauseTask = (id: number, status: Status, taskStore: any) => {
 }
 
 
- const actionsButtonConfig: Record<Actions, ActionButtonConfig> = {
-            [Actions.Start]: {
+ const actionsButtonConfig: Record<TaskAction, ActionButtonConfig> = {
+            [TaskAction.Start]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Start',
                 color: 'success',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation(); startTaskApi(data.id, taskStore); },
             },
-            [Actions.Edit]: {
+            [TaskAction.Edit]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Edit',
                 color: 'secondary',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation(); editTask(data.id, data.status, taskStore); }
             },
-            [Actions.Delete]: {
+            [TaskAction.Delete]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Delete',
                 color: 'error',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation();  deleteTaskApi(data.id, taskStore); },
             },
-            [Actions.ReOpen]: {
+            [TaskAction.ReOpen]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Re-open',
                 color: 'warning',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation(); },
             },
-            [Actions.Done]: {
+            [TaskAction.Done]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Done',
                 color: 'success',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation(); completeTaskApi(data.id, taskStore); },
             },
-            [Actions.Pause]: {
+            [TaskAction.Pause]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Pause',
                 color: 'warning',
                 onClick: (e: React.MouseEvent, data: TodoTask, taskStore: any) => { e.stopPropagation(); pauseTask(data.id, data.status, taskStore); },
             },
-            [Actions.Resume]: {
+            [TaskAction.Resume]: {
                 variant: 'contained',
                 size: 'small',
                 label: 'Resume',

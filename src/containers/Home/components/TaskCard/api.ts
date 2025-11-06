@@ -1,9 +1,10 @@
 import { Status } from '../../model';
 import { client } from './../../../../http'
 import { PauseDetails } from './useTaskPauseForm';
+import { ID } from '../../../../types';
 
 export type TodoTask = {
-    id: number;
+    id: ID;
     title: string;
     description?: string;
     status: Status;

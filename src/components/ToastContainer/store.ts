@@ -1,21 +1,6 @@
 import { create } from 'zustand';
-import { ToastProps } from '@karya_app1/rain-js';
-
-interface Toast {
-  id?: string | number;
-  message: string;
-  variant: 'success' | 'error' | 'info' | 'warning';
-  width?: string | number;
-  height?: string | number;
-  duration?: number; // in seconds, if 0 or undefined, no auto-dismiss
-}
-
-interface ToastState {
-  toasts: ToastProps[];
-  addToast: (toast: Toast) => string | number;
-  removeToast: (id?: string | number) => void;
-  clearAllToasts: () => void;
-}
+import { ToastProps as RainToastProps } from '@karya_app1/rain-js';
+import type { ToastProps, ToastState } from '../../types';
 
 // Create a simple ID generator
 let toastCounter = 0;
@@ -27,9 +12,9 @@ export const useToastStore = create<ToastState>((set) => ({
   toasts: [],
 
   // Add a new toast to the array
-  addToast: (toast: Toast) => {
+  addToast: (toast: Omit<ToastProps, 'id'>) => {
     const id = generateId();
-    const item: ToastProps = {
+    const item: RainToastProps = {
       id,
       message: toast.message,
       variant: toast.variant,
@@ -59,24 +44,20 @@ export const useToastStore = create<ToastState>((set) => ({
 
 
 // Variant-specific helper methods
-export const showSuccessToast = (toast: Toast) => {
-  const id = generateId();
-  return useToastStore.getState().addToast({ ...toast, variant: 'success', id });
+export const showSuccessToast = (toast: Omit<ToastProps, 'id' | 'variant'>) => {
+  return useToastStore.getState().addToast({ ...toast, variant: 'success' });
 };
 
-export const showErrorToast = (toast: Toast) => {
-  const id = generateId();
-  return useToastStore.getState().addToast({ ...toast, variant: 'error', id });
+export const showErrorToast = (toast: Omit<ToastProps, 'id' | 'variant'>) => {
+  return useToastStore.getState().addToast({ ...toast, variant: 'error' });
 };
 
-export const showInfoToast = (toast: Toast) => {
-  const id = generateId();
-  return useToastStore.getState().addToast({ ...toast, variant: 'info', id });
+export const showInfoToast = (toast: Omit<ToastProps, 'id' | 'variant'>) => {
+  return useToastStore.getState().addToast({ ...toast, variant: 'info' });
 };
 
-export const showWarningToast = (toast: Toast) => {
-  const id = generateId();
-  return useToastStore.getState().addToast({ ...toast, variant: 'warning', id });
+export const showWarningToast = (toast: Omit<ToastProps, 'id' | 'variant'>) => {
+  return useToastStore.getState().addToast({ ...toast, variant: 'warning' });
 };
 
 export const hideToast = (id: string | number) => {

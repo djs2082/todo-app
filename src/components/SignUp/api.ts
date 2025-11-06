@@ -1,25 +1,10 @@
 import { client } from '../../http';
+import { SignupPayload, AuthResponse } from '../../types';
 
-export type SignupPayload = {
-    first_name: string;
-    last_name: string;
-    email: string;
-    mobile?: string;
-    password: string;
-    confirm_password: string;
-    account_name: string;
-};
-
-export type SignupResponse = {
-    token?: string;
-    user?: any;
-    [key: string]: any;
-};
-
-export async function signup(payload: SignupPayload): Promise<SignupResponse> {
+export async function signup(payload: SignupPayload): Promise<AuthResponse> {
     try {
         const res = await client.post('/signup', { user: payload });
-        return (res as any).data as SignupResponse;
+        return (res as any).data as AuthResponse;
     } catch (error) {
         return Promise.reject(error);
     }

@@ -13,6 +13,7 @@ const TaskPause = ({ pauseOpen, setPauseOpen }: TaskPauseProps) => {
       const { form, submit } = usePauseForm({
           onSubmit: async (vals) => {
             const { taskToPause } = useTaskStore.getState();
+            if (!taskToPause) return;
             await pauseTask(taskToPause.id, vals);
             const response = await fetchTasks({});
             if (response.data) {

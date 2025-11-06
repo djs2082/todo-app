@@ -2,21 +2,13 @@ import React from 'react';
 import { useDynamicForm, useFormFieldValidator } from '@karya_app1/rain-js';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
+import { ForgotPasswordFormData, FormHookOptions } from '../../types';
 
-export type ForgotPasswordDetails = {
-    email: string;
-};
-
-export type UseForgotPasswordFormOptions = {
-    onSubmit?: (vals: ForgotPasswordDetails) => Promise<void> | void;
-    onChange?: (vals: Partial<ForgotPasswordDetails>, delta?: { name: keyof ForgotPasswordDetails & string; value: any }) => void;
-};
-
-export function useForgotPasswordForm(options: UseForgotPasswordFormOptions = {}) {
+export function useForgotPasswordForm(options: FormHookOptions<ForgotPasswordFormData> = {}) {
     const { onSubmit, onChange } = options;
     const validatorInstance = useFormFieldValidator();
 
-    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<ForgotPasswordDetails>(
+    const { form, values, submit, errors, clearAllErrors, clearFieldError } = useDynamicForm<ForgotPasswordFormData>(
         {
             fields: [
                 {
@@ -31,14 +23,14 @@ export function useForgotPasswordForm(options: UseForgotPasswordFormOptions = {}
             ],
             submit: {
                 label: 'Reset Password',
-                onSubmit: async (values: ForgotPasswordDetails) => {
+                onSubmit: async (values: ForgotPasswordFormData) => {
                     if (onSubmit) {
                         await onSubmit(values);
                     } else {
                     }
                 },
             },
-            onChange: (values: ForgotPasswordDetails, delta?: { name: keyof ForgotPasswordDetails & string; value: any }) => {
+            onChange: (values: ForgotPasswordFormData, delta?: { name: keyof ForgotPasswordFormData & string; value: any }) => {
                 if (onChange) onChange(values, delta);
             },
         },

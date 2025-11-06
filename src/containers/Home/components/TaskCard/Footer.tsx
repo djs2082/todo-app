@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import Typography from '../../../../components/ui/Typography';
-import { Status, TaskData } from '../../model';
+import { Status, Task } from '../../model';
 import Button from './../../../../components/ui/Button';
 import FooterButton from './FooterButton';
 
@@ -8,7 +8,7 @@ type FooterProps = {
   dueDateTime: string | null;
   status: Status;
   pauses: number[];
-  task: TaskData
+  task: Task
 };
 
 const Footer = ({ dueDateTime, status, pauses, task }: FooterProps) => {
