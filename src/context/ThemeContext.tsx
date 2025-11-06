@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
-import useUserStore from '../userStore';
+import useUserStore from 'store/userStore';
 
 type Theme = 'light' | 'dark';
 

@@ -17,7 +17,7 @@ import { Upcoming } from '@mui/icons-material';
 import UpdatePassword from './components/UpdatePassword';
 import { fetchUser } from './api';
 import { useEffect } from 'react';
-import store from './userStore';
+import store from 'store/userStore';
 
 function App() {
   return (

@@ -1,11 +1,11 @@
 import React from 'react';
-import Button from '../ui/Button';
-import Robot from '../ui/Robot/Robot';
+import Button from 'components/ui/Button';
+import Robot from 'components/ui/Robot/Robot';
 import { useLoginForm } from './useLoginForm';
 import { login } from './api';
-import Typography from '../ui/Typography';
+import Typography from 'components/ui/Typography';
 import ForgotPassword from '../ForgotPassword';
-import useUserStore from '../../userStore';
+import useUserStore from 'store/userStore';
 
 interface LoginProps {
     setSignupOpen: (val:boolean) => void;

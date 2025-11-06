@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../context/ThemeContext';
-import './landing.css';
-import Login from '../../components/Login';
-import SignUp from '../../components/SignUp';
-import Typography from  '../../components/ui/Typography';
-import Card from '../../components/ui/Card';
+import { useTheme } from 'context/ThemeContext';
+import Login from 'components/Login';
+import SignUp from 'components/SignUp';
+import Typography from  'components/ui/Typography';
+import Card from 'components/ui/Card';
 import { useResponsive } from '@karya_app1/rain-js';
-import useUserStore from '../../userStore';
+import useUserStore from 'store/userStore';
 
 
 export default function Landing() {

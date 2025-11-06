@@ -1,20 +1,12 @@
 import { client } from '../../http';
-import { Priority, Status } from './model';
+import { TasksIndexedByStatus } from './model';
 
 export type FetchTasksPayload = {
 };
 
-type Task = {
-    id: string | number;
-    title: string;
-    description: string;
-    due_date_time: string;
-    priority: Priority;
-    status: Status
-};
 export type FetchTasksResponse = {
     message?: string;
-    data?: { [key in Status]: Task[] };
+    data?: TasksIndexedByStatus;
 };
 
 

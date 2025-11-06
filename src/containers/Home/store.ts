@@ -1,36 +1,51 @@
 import { create } from 'zustand';
-import { Priority, Status } from './model';
-
-interface Task {
-  id: string | number;
-  title: string;
-  description: string;
-  priority: Priority;
-  due_date_time: string;
-  status: Status;
-}
+import { Priority, Status, TaskData } from './model';
 
 type TasksIndexedByStatus = {
-  [key in Status]: Task[];
+  [key in Status]: TaskData[];
 };
+
+type TaskToEdit = {
+  id: number;
+  priority: Priority;
+  status: Status;
+  title: string;
+  description: string;
+  due_date_time: string;
+}
 
 interface TaskState {
   tasks: TasksIndexedByStatus;
   addTasks: (tasks: TasksIndexedByStatus) => void;
-  addTask: (task: Task) => void;
+  addTask: (task: TaskData) => void;
   removeTask: (id?: string | number) => void;
-  getTask: (id: number, status: Status) => Task | undefined;
+  getTask: (id: number, status: Status) => TaskData | undefined;
   clearAllTasks: () => void;
   showAddTaskModal: boolean;
   setShowAddTaskModal: (show: boolean) => void;
   showEditTaskModal: boolean;
   setShowEditTaskModal: (show: boolean) => void;
-  taskToEdit: Task;
+  taskToEdit: TaskData;
   setTaskToEdit: (id: number, status: Status) => void;
   showTaskPauseModal: boolean;
   setShowTaskPauseModal: (show: boolean) => void;
-  taskToPause: Task;
+  taskToPause: TaskData;
   setTaskToPause: (id: number, status: Status) => void;
+}
+
+const dummyTask: TaskData = {
+    id: 0,
+    priority: Priority.Medium,
+    status: Status.Pending,
+    title: "",
+    description: "",
+    due_date_time: "",
+    usr_id: 0,
+    created_at: "",
+    updated_at: "",
+    total_working_time: 0,
+    started_at: null,
+    last_resumed_at: null
 }
 
 export const useTaskStore = create<TaskState>((set, get) => ({
@@ -42,12 +57,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   },
 
   taskToEdit: {
-    id: 0,
-    priority: Priority.Medium,
-    status: Status.Pending,
-    title: "",
-    description: "",
-    due_date_time: "",
+   ...dummyTask
   },
 
   addTask: (task) =>
@@ -93,12 +103,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     set({ taskToEdit: task });
   },
   taskToPause: {
-    id: 0,
-    priority: Priority.Medium,
-    status: Status.Pending,
-    title: "",
-    description: "",
-    due_date_time: "",
+   ...dummyTask
   },
   setTaskToPause: (id: number, status: Status) => {
     console.log('setTaskToPause called with id:', id, 'status:', status);

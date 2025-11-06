@@ -48,6 +48,8 @@ export type Task = {
     priority: 'low' | 'medium' | 'high';
 };
 
+export type TasksIndexedByStatus = { [key in Status]: TaskData[] }
+
 function nowIso(): string {
   return new Date().toISOString();
 }

@@ -28,8 +28,8 @@ const authTokenGetter = (): string | null => {
 
 const addFlags = (config: AxiosRequestConfig & ExtraRequestFlags): ExtraRequestFlags  => {
   const flags: ExtraRequestFlags = {
-    show_error: config?.data?.show_error ?? true,
-    show_success: config?.data?.show_success ?? true,
+    show_error: config?.data?.show_error ?? false,
+    show_success: config?.data?.show_success ?? false,
     show_loader: config?.data?.show_loader ?? true,
     success_message: config?.data?.success_message,
     error_message: config?.data?.error_message,
@@ -99,3 +99,5 @@ export const client = createHttpClient({
   onErrorToast: (err: any) => {
   }
 });
+
+client.defaults.withCredentials = true;

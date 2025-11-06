@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import BrandLogo from '../BrandLogo';
 import Icon from '../ui/Icon';
 import { signOut as userSignout, changeTheme as changeUserTheme} from './api';
-import useUserStore from '../../userStore';
+import useUserStore from 'store/userStore';
 
 
 interface AppHeaderProps {
