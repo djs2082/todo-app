@@ -14,7 +14,7 @@ export type LoginResponse = {
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
     try {
-    const res = await client.post('/login', { user: payload });
+    const res = await client.post('/login', { user: payload }, { withCredentials: true });
     return (res as any).data as LoginResponse;
     } catch (error) {
         console.error('Login API error:', error);
