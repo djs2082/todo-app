@@ -129,16 +129,45 @@ class ReactS3Deployer:
             return False
 
     def build_react_app(self, react_app_path):
-        """Build the React app"""
+        """Build the React app in the provided directory"""
         try:
-            print("Building React app...")
-            result = subprocess.run(['npm', 'run', 'build'], 
-                          cwd=react_app_path, check=True, capture_output=True, text=True)
+            # Verify package.json and build script exist
+            pkg_path = os.path.join(react_app_path, 'package.json')
+            if not os.path.exists(pkg_path):
+                print(f"✗ package.json not found at {pkg_path}")
+                return False
+
+            try:
+                with open(pkg_path, 'r', encoding='utf-8') as f:
+                    pkg = json.load(f)
+                scripts = pkg.get('scripts', {}) or {}
+                if 'build' not in scripts:
+                    print("✗ No 'build' script found in package.json")
+                    return False
+            except Exception as jerr:
+                print(f"⚠️ Could not read package.json: {jerr}")
+
+            print(f"Building React app in {react_app_path}...")
+            result = subprocess.run(
+                ['npm', 'run', 'build'],
+                cwd=react_app_path,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            # If build succeeded, show concise output
             print("✓ React app built successfully")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"✗ Failed to build React app: {e.stderr if e.stderr else str(e)}")
-            print("Make sure your React app has a 'build' script in package.json")
+            # Show both stdout and stderr to aid debugging
+            stdout = (e.stdout or '').strip()
+            stderr = (e.stderr or '').strip()
+            if stdout:
+                print("--- build stdout ---\n" + stdout)
+            if stderr:
+                print("--- build stderr ---\n" + stderr)
+            print("✗ Failed to build React app")
+            print("Tip: Ensure 'npm run build' passes locally and that 'build' exists in package.json")
             return False
 
     def create_s3_bucket(self):
