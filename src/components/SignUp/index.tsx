@@ -26,8 +26,7 @@ const SignUp: React.FC<SignUpProps> = ({ show, setSignupOpen }) => {
                     email: vals.email,
                     mobile: vals.mobile,
                     password: vals.password,
-                    confirm_password: vals.confirmPassword,
-                    account_name: 'public'
+                    confirm_password: vals.confirmPassword
                 });
                 setSignupOpen(false);
             }

@@ -7,7 +7,6 @@ export type SignupPayload = {
     mobile?: string;
     password: string;
     confirm_password: string;
-    account_name: string;
 };
 
 export type SignupResponse = {
@@ -18,7 +17,7 @@ export type SignupResponse = {
 
 export async function signup(payload: SignupPayload): Promise<SignupResponse> {
     try {
-        const res = await client.post('/signup', { user: payload });
+        const res = await client.post('/signup', { user: payload, show_error: true });
         return (res as any).data as SignupResponse;
     } catch (error) {
         return Promise.reject(error);
